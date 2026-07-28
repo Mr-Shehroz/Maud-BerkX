@@ -6,131 +6,165 @@ import { ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Same gold hairline used across the site. Here it becomes literal: the
-// thread that runs through Maud's actual timeline, which is the one place
-// on the site where that metaphor is earned rather than decorative.
 const GOLD = '#B08C5A';
+const BROWN = '#583929';
 
 export default function FaithVisionSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const spineRef = useRef<HTMLDivElement>(null);
   const imageWrapRef = useRef<HTMLDivElement>(null);
   const imageInnerRef = useRef<HTMLDivElement>(null);
   const goldVertRef = useRef<HTMLSpanElement>(null);
-  const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
 
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  const chapters = [
+    {
+      roman: 'I',
+      year: '2012',
+      title: 'The Foundation',
+      desc: 'A vision of purposeful leadership takes root — the first seeds of a calling that would grow into a life\u2019s work.',
+      quote: '“Every legacy begins as a whisper before it becomes a voice.”',
+      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=700&h=850&fit=crop',
+    },
+    {
+      roman: 'II',
+      year: '2018',
+      title: 'Deepening Faith',
+      desc: 'Wisdom becomes the core. The Kingdom focus emerges as the true north of every decision made from here forward.',
+      quote: '“Faith did not change the direction — it became the compass.”',
+      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=700&h=850&fit=crop',
+    },
+    {
+      roman: 'III',
+      year: '2023',
+      title: 'Expanding Impact',
+      desc: 'The global community finds leadership with grace, carrying the work across continents and cultures.',
+      quote: '“Influence, rightly stewarded, has no borders.”',
+      img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=700&h=850&fit=crop',
+    },
+    {
+      roman: 'IV',
+      year: '2026',
+      title: 'Kingdom Legacy',
+      desc: 'Vision and wisdom are codified for future generations — a legacy built to hold weight long after today.',
+      quote: '“What is built to last is never built alone.”',
+      img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=700&h=850&fit=crop',
+    },
+  ];
+
   useEffect(() => {
     const ctx = gsap.context(() => {
-      if (prefersReducedMotion) return;
-
       gsap.fromTo(
         '.fv-label',
-        { opacity: 0, x: -24 },
+        { opacity: 0, y: 16 },
         {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: 'power3.out',
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         }
       );
 
       gsap.fromTo(
-        '.timeline-item',
-        { opacity: 0, y: 40 },
+        '.fv-heading-line',
+        { yPercent: 110 },
         {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.2,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.timeline-container', start: 'top 75%' },
+          yPercent: 0, duration: 1, stagger: 0.1, ease: 'expo.out',
+          scrollTrigger: { trigger: '.fv-heading', start: 'top 82%' },
         }
       );
 
-      gsap.fromTo(
-        '.timeline-node-dot',
-        { scale: 0 },
-        {
-          scale: 1,
-          duration: 0.6,
-          stagger: 0.2,
-          ease: 'back.out(2.5)',
-          scrollTrigger: { trigger: '.timeline-container', start: 'top 75%' },
-        }
-      );
+      // The book spine draws down through the whole chapters block
+      if (spineRef.current) {
+        gsap.fromTo(
+          spineRef.current,
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: 'none',
+            transformOrigin: 'top center',
+            scrollTrigger: {
+              trigger: '.chapters-list',
+              start: 'top 65%',
+              end: 'bottom 75%',
+              scrub: 0.6,
+            },
+          }
+        );
+      }
 
-      // The gold line's fill IS the timeline — it draws as you scroll
-      // through her actual history.
-      gsap.fromTo(
-        '.timeline-line-fill',
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '.timeline-container',
-            start: 'top 65%',
-            end: 'bottom 65%',
-            scrub: 0.6,
-          },
-        }
-      );
+      gsap.utils.toArray<HTMLElement>('.chapter-row').forEach((row) => {
+        const isLeft = row.dataset.side === 'left';
 
-      // Connector ticks bridge the node to the copy, closing the visual gap
-      // that made the row feel empty.
-      gsap.fromTo(
-        '.timeline-connector',
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          duration: 0.7,
-          stagger: 0.2,
-          delay: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.timeline-container', start: 'top 75%' },
-        }
-      );
+        gsap.fromTo(
+          row.querySelector('.chapter-image-wrap'),
+          { clipPath: 'inset(0 0 100% 0)' },
+          {
+            clipPath: 'inset(0 0 0% 0)',
+            duration: 1.1,
+            ease: 'expo.inOut',
+            scrollTrigger: { trigger: row, start: 'top 78%' },
+          }
+        );
 
-      // Oversized ghost year fills the empty opposite column — same device
-      // as the ghost quote mark elsewhere on the site.
-      gsap.fromTo(
-        '.timeline-ghost-year',
-        { opacity: 0, y: 16 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          stagger: 0.2,
-          ease: 'power2.out',
-          scrollTrigger: { trigger: '.timeline-container', start: 'top 75%' },
-        }
-      );
+        gsap.fromTo(
+          row.querySelector('.chapter-roman'),
+          { opacity: 0, scale: 0.7 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 0.7,
+            ease: 'back.out(2)',
+            scrollTrigger: { trigger: row, start: 'top 78%' },
+          }
+        );
 
-      // Active-chapter spotlight: the item nearest center brightens and its
-      // node grows, everything else settles back — gives the timeline a
-      // sense of progression rather than sitting there as a static list.
-      itemRefs.current.forEach((el) => {
-        if (!el) return;
-        const node = el.querySelector('.timeline-node');
-        const ghost = el.querySelector('.timeline-ghost-year') as HTMLElement | null;
-        ScrollTrigger.create({
-          trigger: el,
-          start: 'top center',
-          end: 'bottom center',
-          onToggle: (self) => {
-            gsap.to(el, { opacity: self.isActive ? 1 : 0.45, duration: 0.5, ease: 'power2.out' });
-            if (node) gsap.to(node, { scale: self.isActive ? 1.35 : 1, duration: 0.5, ease: 'back.out(2)' });
-            if (ghost) gsap.to(ghost, { opacity: self.isActive ? 0.1 : 0.05, duration: 0.6 });
-          },
-        });
+        gsap.fromTo(
+          [
+            row.querySelector('.chapter-title'),
+            row.querySelector('.chapter-desc'),
+            row.querySelector('.chapter-quote'),
+            row.querySelector('.chapter-footer'),
+          ],
+          { opacity: 0, y: 22 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'power3.out',
+            delay: 0.15,
+            scrollTrigger: { trigger: row, start: 'top 78%' },
+          }
+        );
+
+        gsap.fromTo(
+          row.querySelector('.chapter-rule'),
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 0.9,
+            ease: 'power3.out',
+            transformOrigin: isLeft ? 'left center' : 'right center',
+            scrollTrigger: { trigger: row, start: 'top 78%' },
+          }
+        );
+
+        // Node on the spine lights up as its chapter arrives
+        gsap.fromTo(
+          row.querySelector('.chapter-node'),
+          { scale: 0 },
+          {
+            scale: 1,
+            duration: 0.5,
+            ease: 'back.out(2.5)',
+            scrollTrigger: { trigger: row, start: 'top 75%' },
+          }
+        );
       });
 
-      // Quote/vision image: same curtain wipe + parallax as Hero/About,
-      // for a consistent site-wide image language.
+      // Quote/vision image
       if (imageWrapRef.current && imageInnerRef.current) {
         gsap.fromTo(
           imageWrapRef.current,
@@ -174,15 +208,11 @@ export default function FaithVisionSection() {
         );
       }
 
-      // Vision headline: per-line mask reveal
       gsap.fromTo(
         '.quote-heading-line',
         { yPercent: 110 },
         {
-          yPercent: 0,
-          duration: 1,
-          stagger: 0.14,
-          ease: 'expo.out',
+          yPercent: 0, duration: 1, stagger: 0.14, ease: 'expo.out',
           scrollTrigger: { trigger: '.quote-content', start: 'top 82%' },
         }
       );
@@ -191,11 +221,7 @@ export default function FaithVisionSection() {
         '.quote-signature',
         { opacity: 0, y: 16 },
         {
-          opacity: 1,
-          y: 0,
-          duration: 0.8,
-          ease: 'power3.out',
-          delay: 0.2,
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.2,
           scrollTrigger: { trigger: '.quote-signature', start: 'top 88%' },
         }
       );
@@ -204,154 +230,144 @@ export default function FaithVisionSection() {
     return () => ctx.revert();
   }, [prefersReducedMotion]);
 
-  const milestones = [
-    { year: '2012', title: 'The Foundation', desc: 'A vision of purposeful leadership takes root.' },
-    { year: '2018', title: 'Deepening Faith', desc: 'Wisdom becomes the core. The Kingdom focus emerges.' },
-    { year: '2023', title: 'Expanding Impact', desc: 'The global community finds leadership with grace.' },
-    { year: '2026', title: 'Kingdom Legacy', desc: 'Vision and wisdom are codified for future generations.' },
-  ];
-
   return (
     <section ref={sectionRef} data-section-label="Faith & Vision" className="relative bg-[#F6F6F6] overflow-hidden">
       <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 py-24 md:py-32 lg:py-40">
 
         <p
-          className="fv-label text-[#475D66] text-xs md:text-sm tracking-[0.25em] uppercase mb-20 md:mb-32"
+          className="fv-label text-center text-[#453E33]/55 text-xs md:text-sm tracking-[0.28em] uppercase mb-5"
           style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
         >
           04 — Faith &amp; Vision
         </p>
 
-        {/* TIMELINE — plain text blocks either side of a gold line, no
-            card boxes, no icon circles. The line's fill traces her history
-            as you scroll. */}
-        <div className="timeline-container relative mb-32 md:mb-48">
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-[#282828]/12 md:-translate-x-1/2">
+        <div className="fv-heading text-center mb-8">
+          <h2
+            className="text-[#282828] text-4xl md:text-5xl lg:text-6xl font-normal"
+            style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+          >
+            <span className="block overflow-hidden">
+              <span className="fv-heading-line block">Four chapters, one calling.</span>
+            </span>
+          </h2>
+        </div>
+
+        <p
+          className="text-center text-[#453E33]/70 text-sm md:text-base max-w-lg mx-auto mb-24 md:mb-32"
+          style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+        >
+          Fourteen years of quiet conviction, told the way it was lived — not as a chart of
+          dates, but as a story still being written.
+        </p>
+
+        {/* CHAPTERS — image + text spreads, tied together by a single
+            gold "book spine" running down the center. */}
+        <div className="chapters-list relative">
+          {/* Book spine — the connective device that replaces a timeline
+              line, but reads as binding a book rather than plotting dates */}
+          <div className="hidden md:block absolute left-1/2 top-4 bottom-4 w-px -translate-x-1/2 bg-[#282828]/8">
             <div
-              className="timeline-line-fill absolute top-0 left-0 w-full h-full origin-top"
+              ref={spineRef}
+              className="absolute inset-0 w-full origin-top"
               style={{ backgroundColor: GOLD, transform: 'scaleY(0)' }}
             />
           </div>
 
-          <div className="space-y-16 md:space-y-24">
-            {milestones.map((item, index) => {
-              const isLeft = index % 2 === 0;
+          <div className="space-y-24 md:space-y-32">
+            {chapters.map((c, i) => {
+              const isLeft = i % 2 === 0;
               return (
                 <div
-                  key={item.year}
-                  ref={(el) => { itemRefs.current[index] = el; }}
-                  className={`timeline-item relative flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-16 ${
-                    isLeft ? 'md:flex-row' : 'md:flex-row-reverse'
+                  key={c.year}
+                  data-side={isLeft ? 'left' : 'right'}
+                  className={`chapter-row relative grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center ${
+                    isLeft ? '' : 'md:[direction:rtl]'
                   }`}
                 >
-                  {/* Node — grows and fills when this chapter is active */}
-                  <div className="timeline-node absolute left-4 md:left-1/2 w-3 h-3 rounded-full border border-[#B08C5A] flex items-center justify-center -translate-x-1/2 z-10 bg-[#F6F6F6]">
-                    <span className="timeline-node-dot w-1.5 h-1.5 rounded-full" style={{ backgroundColor: GOLD }} />
-                  </div>
-
-                  {/* Connector tick — bridges the gap between the line and the copy */}
+                  {/* Node on the spine */}
                   <span
-                    className={`timeline-connector hidden md:block absolute top-1/2 -translate-y-1/2 h-px w-16 ${
-                      isLeft ? 'right-1/2' : 'left-1/2'
-                    }`}
-                    style={{
-                      backgroundColor: GOLD,
-                      opacity: 0.5,
-                      transform: 'scaleX(0)',
-                      transformOrigin: isLeft ? 'right center' : 'left center',
-                    }}
+                    className="chapter-node hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full z-10"
+                    style={{ backgroundColor: GOLD, boxShadow: `0 0 0 5px #F6F6F6` }}
                   />
 
-                  <div className={`ml-14 md:ml-0 md:w-1/2 ${isLeft ? 'md:pr-16 md:text-right' : 'md:pl-16 md:text-left'}`}>
-                    <p
-                      className="text-[#583929] text-3xl md:text-4xl leading-none mb-3 tabular-nums"
-                      style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+                  {/* Photograph */}
+                  <div className="relative md:[direction:ltr]">
+                    <div className="chapter-image-wrap relative h-[320px] md:h-[420px] overflow-hidden rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.12)]">
+                      <img
+                        src={c.img}
+                        alt={c.title}
+                        className="w-full h-full object-cover grayscale"
+                      />
+                    </div>
+                    <span
+                      className="absolute -top-4 -left-4 md:-top-5 md:-left-5 text-7xl md:text-8xl leading-none select-none"
+                      style={{
+                        fontFamily: 'var(--font-eb-garamond), serif',
+                        color: 'transparent',
+                        WebkitTextStroke: `1.5px ${GOLD}`,
+                      }}
+                      aria-hidden
                     >
-                      {item.year}
-                    </p>
-                    <h3
-                      className="text-[#282828] text-lg md:text-xl font-semibold tracking-[0.08em] uppercase mb-3"
-                      style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      className={`text-[#453E33]/75 text-sm md:text-base leading-relaxed ${isLeft ? 'md:ml-auto' : ''} max-w-sm`}
-                      style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                    >
-                      {item.desc}
-                    </p>
+                      {c.roman}
+                    </span>
                   </div>
 
-                  {/* Ghost year — fills what was empty space with a quiet
-                      typographic watermark instead of leaving it blank */}
-                  <div
-                    className={`hidden md:flex md:w-1/2 items-center overflow-hidden pointer-events-none select-none ${
-                      isLeft ? 'justify-start pl-16' : 'justify-end pr-16'
-                    }`}
-                    aria-hidden
-                  >
-                    <span
-                      className="timeline-ghost-year text-[#583929] leading-none"
-                      style={{ fontFamily: 'var(--font-eb-garamond), serif', fontSize: '9rem', opacity: 0.05 }}
+                  {/* Copy */}
+                  <div className={`relative md:[direction:ltr] max-w-xl ${isLeft ? '' : 'md:ml-auto'}`}>
+                    <div className="flex items-center gap-4 mb-5">
+                      <span
+                        className="chapter-roman inline-flex items-center justify-center w-11 h-11 rounded-full border shrink-0"
+                        style={{ borderColor: `${GOLD}80`, color: GOLD, fontFamily: 'var(--font-eb-garamond), serif', fontSize: '1.05rem' }}
+                      >
+                        {c.roman}
+                      </span>
+                      <p
+                        className="text-2xl md:text-3xl tabular-nums"
+                        style={{ color: BROWN, fontFamily: 'var(--font-eb-garamond), serif' }}
+                      >
+                        {c.year}
+                      </p>
+                    </div>
+
+                    <h3
+                      className="chapter-title text-[#282828] text-3xl md:text-4xl leading-tight mb-5"
+                      style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
                     >
-                      {item.year}
-                    </span>
+                      {c.title}
+                    </h3>
+
+                    <span
+                      className="chapter-rule block h-px w-14 mb-5 origin-left"
+                      style={{ backgroundColor: GOLD }}
+                    />
+
+                    <p
+                      className="chapter-desc text-[#453E33]/75 text-base md:text-lg leading-relaxed mb-6"
+                      style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+                    >
+                      {c.desc}
+                    </p>
+
+                    <p
+                      className="chapter-quote text-lg md:text-xl italic leading-snug mb-8"
+                      style={{ color: BROWN, fontFamily: 'var(--font-eb-garamond), serif' }}
+                    >
+                      {c.quote}
+                    </p>
+
+                    <div className="chapter-footer flex items-center gap-3">
+                      <span className="h-px w-8" style={{ backgroundColor: `${GOLD}55` }} />
+                      <span
+                        className="text-xs tracking-[0.2em] uppercase text-[#453E33]/45"
+                        style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+                      >
+                        Chapter {c.roman} — p. {String(i + 1).padStart(2, '0')}
+                      </span>
+                    </div>
                   </div>
                 </div>
               );
             })}
-          </div>
-        </div>
-
-        {/* QUOTE / VISION */}
-        <div className="quote-section grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center pt-16 md:pt-20 border-t border-[#282828]/10">
-
-          <div className="relative">
-            <div ref={imageWrapRef} className="relative h-[440px] md:h-[560px] overflow-hidden">
-              <div ref={imageInnerRef} className="absolute inset-[-4%]">
-                <img src="/banner.webp" alt="Maud Berkx — Vision" className="w-full h-full object-cover object-top" />
-              </div>
-            </div>
-            <span
-              ref={goldVertRef}
-              className="hidden lg:block absolute top-0 -right-8 w-px h-full origin-top"
-              style={{ backgroundColor: GOLD, transform: 'scaleY(0)' }}
-            />
-          </div>
-
-          <div className="quote-content space-y-8 lg:pl-8">
-            <h2
-              className="text-[#282828] text-4xl md:text-5xl lg:text-6xl font-normal leading-[1.15]"
-              style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-            >
-              <span className="block overflow-hidden">
-                <span className="quote-heading-line block">We build. We serve.</span>
-              </span>
-              <span className="block overflow-hidden">
-                <span className="quote-heading-line block">We lead with love.</span>
-              </span>
-              <span className="block overflow-hidden">
-                <span className="quote-heading-line block italic text-[#583929]">For the Glory of the King.</span>
-              </span>
-            </h2>
-
-            <div className="quote-signature pt-8">
-              <p className="text-[#583929] text-5xl md:text-6xl mb-8" style={{ fontFamily: 'var(--font-signature), cursive' }}>
-                Maud Berkx
-              </p>
-
-              <a
-                href="/vision"
-                className="group inline-flex items-center gap-3 text-[#282828] text-sm md:text-base transition-colors duration-300 hover:text-[#583929]"
-                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-              >
-                <span className="border-b border-[#282828]/50 pb-1 transition-colors duration-300 group-hover:border-[#583929]">
-                  Continue the Journey.
-                </span>
-                <ArrowRight size={16} className="transform transition-transform duration-300 group-hover:translate-x-1" />
-              </a>
-            </div>
           </div>
         </div>
       </div>

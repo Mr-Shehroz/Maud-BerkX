@@ -80,12 +80,6 @@ export default function Footer() {
             >
               Helping women build a Kingdom legacy through faith, wisdom, and leadership.
             </p>
-            <p 
-              className="text-[#583929] text-4xl"
-              style={{ fontFamily: 'var(--font-signature), cursive' }}
-            >
-              Maud Berkx
-            </p>
           </div>
 
           {/* Column 2: Navigation */}

@@ -3,13 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
 
-// Thin gold hairline — the signature "legacy line" motif from Maud's brand mark.
-const GOLD = '#B08C5A';
+// Updated Gold color to match the reference image's metallic gold accent
+const GOLD = '#C5A065'; 
 
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLAnchorElement>(null);
-  const logoLineRef = useRef<HTMLSpanElement>(null);
   const requestBtnRef = useRef<HTMLButtonElement>(null);
   const menuIconRef = useRef<HTMLSpanElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -32,37 +31,19 @@ export default function Header() {
 
     const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
 
-    tl.from('.header-btn', {
+    tl.from(logoRef.current, {
       opacity: 0,
       x: -24,
       duration: 1,
     })
       .from(
-        logoRef.current,
-        {
-          opacity: 0,
-          y: -16,
-          filter: 'blur(6px)',
-          duration: 1.1,
-        },
-        '-=0.75'
-      )
-      .from(
-        '.header-menu',
+        '.header-cta-group',
         {
           opacity: 0,
           x: 24,
           duration: 1,
         },
-        '-=0.9'
-      )
-      // Gold line draws outward from the center beneath the logo — the one
-      // deliberately "premium" flourish, everything else stays quiet.
-      .fromTo(
-        logoLineRef.current,
-        { scaleX: 0 },
-        { scaleX: 1, duration: 1, ease: 'power3.out', transformOrigin: 'center' },
-        '-=0.5'
+        '-=0.7'
       );
 
     // Scroll state
@@ -111,11 +92,7 @@ export default function Header() {
     });
   }, [mobileMenuOpen]);
 
-  // Establish the sidebar's closed position through GSAP itself (once, on
-  // mount). Doing this via a raw inline style instead caused GSAP's internal
-  // transform cache to desync from the DOM: gsap.to({ xPercent: 0 }) would
-  // think the panel was already at xPercent 0 and silently no-op, so the
-  // sidebar (and every nav link inside it) never actually slid into view.
+  // Establish the sidebar's closed position through GSAP itself
   useEffect(() => {
     if (sidebarRef.current) {
       gsap.set(sidebarRef.current, { xPercent: 100 });
@@ -173,8 +150,8 @@ export default function Header() {
         ref={headerRef}
         className={`fixed top-0 left-0 w-full z-40 transition-all duration-500 ${
           scrolled
-            ? 'bg-[#F6F6F6]/95 backdrop-blur-md shadow-[0_1px_0_0_rgba(40,40,40,0.08)]'
-            : 'bg-[#F6F6F6]'
+            ? 'bg-[#121212]/95 backdrop-blur-md border-b border-white/5'
+            : 'bg-transparent'
         }`}
       >
         <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
@@ -183,69 +160,50 @@ export default function Header() {
               scrolled ? 'h-16 md:h-20' : 'h-20 md:h-24'
             }`}
           >
-            {/* Left: Request Invitation Button */}
-            <button
-              ref={requestBtnRef}
-              className="header-btn relative font-medium text-[#F6F6F6] bg-[#282828] px-6 md:px-8 py-3 rounded-full transition-colors duration-300 whitespace-nowrap text-xs md:text-sm hidden lg:block hover:bg-[#583929]"
-              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-            >
-              Request Invitation
-            </button>
-
-            {/* Center: Logo */}
+            {/* Left: Logo */}
             <a
               ref={logoRef}
               href="/"
-              className="header-logo group relative inline-flex flex-col items-center leading-none"
+              className="header-logo group relative inline-flex flex-col items-start leading-none"
             >
               <span
-                className="font-semibold tracking-[0.2em] text-[#282828] uppercase text-xl md:text-2xl lg:text-3xl transition-[letter-spacing] duration-500 group-hover:tracking-[0.26em]"
+                className="font-serif font-medium tracking-[0.15em] text-white uppercase text-xl md:text-2xl lg:text-3xl transition-colors duration-300 group-hover:text-[#C5A065]"
                 style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
               >
-                Maud Berkx
+                Maud Berky
               </span>
-              <span
-                ref={logoLineRef}
-                className="mt-1.5 h-px w-full origin-center"
-                style={{ backgroundColor: GOLD, transform: 'scaleX(0)' }}
-              />
             </a>
 
-            {/* Right: Menu Button */}
-            <button
-              className="header-menu flex items-center gap-3 font-medium tracking-[0.15em] text-[#282828] uppercase transition-colors duration-300 text-xs md:text-sm hover:text-[#583929]"
-              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <span className="hidden md:inline relative">
-                Menu
-                <span
-                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-                  style={{ backgroundColor: GOLD }}
-                />
-              </span>
-              <span ref={menuIconRef} className="inline-flex">
-                <Menu size={20} />
-              </span>
-            </button>
+            {/* Right: CTA Group (Request Button + Menu Toggle) */}
+            <div className="header-cta-group flex items-center gap-4 md:gap-6">
+              {/* Request Invitation Button - Desktop Only */}
+              {/* <button
+                ref={requestBtnRef}
+                className="hidden md:block relative font-serif font-medium text-[#C5A065] bg-transparent border border-[#C5A065] px-6 md:px-8 py-2.5 rounded-none transition-all duration-300 whitespace-nowrap lg:text-base text-sm hover:bg-[#C5A065] hover:text-[#121212]"
+                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+              >
+                Request Invitation
+              </button> */}
+
+              {/* Menu Toggle Button */}
+              <button
+                className="header-menu flex items-center text-white hover:text-[#C5A065] transition-colors duration-300"
+                onClick={() => setMobileMenuOpen(true)}
+                aria-label="Open menu"
+              >
+                <span ref={menuIconRef} className="inline-flex">
+                  <Menu size={24} strokeWidth={1.5} />
+                </span>
+              </button>
+            </div>
           </div>
         </div>
-
-        {/* Scroll-state hairline, same gold accent as the logo's legacy line */}
-        <div
-          className="h-px w-full origin-left transition-transform duration-500"
-          style={{
-            backgroundColor: GOLD,
-            transform: scrolled ? 'scaleX(1)' : 'scaleX(0)',
-            opacity: 0.35,
-          }}
-        />
       </header>
 
       {/* Backdrop */}
       <div
         ref={backdropRef}
-        className="fixed inset-0 bg-[#282828]/30 backdrop-blur-sm z-50 opacity-0"
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 opacity-0"
         style={{ pointerEvents: 'none' }}
         onClick={() => setMobileMenuOpen(false)}
       />
@@ -253,42 +211,42 @@ export default function Header() {
       {/* Slide-out Sidebar */}
       <div
         ref={sidebarRef}
-        className="fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-[#F6F6F6] shadow-2xl z-[60]"
+        className="fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-[#121212] shadow-2xl z-[60] border-l border-white/5"
       >
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between px-8 py-8 border-b border-[#282828]/10">
+        <div className="flex items-center justify-between px-8 py-8 border-b border-white/5">
           <a
             href="/"
-            className="font-semibold tracking-[0.2em] text-[#282828] uppercase text-xl"
+            className="font-serif font-medium tracking-[0.15em] text-white uppercase text-xl"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
             onClick={() => setMobileMenuOpen(false)}
           >
-            Maud Berkx
+            Maud Berky
           </a>
           <button
-            className="flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300 text-[#282828] hover:bg-[#282828]/5"
+            className="flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300 text-white hover:bg-white/5"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Close menu"
           >
-            <X size={24} />
+            <X size={24} strokeWidth={1.5} />
           </button>
         </div>
 
         {/* Sidebar Navigation */}
         <div className="flex flex-col px-8 py-12 h-[calc(100vh-180px)]">
-          <nav className="space-y-6 flex-1 flex flex-col">
+          <nav className="space-y-8 flex-1 flex flex-col">
             {navItems.map((item, index) => (
               <a
                 key={item}
                 ref={(el) => { navLinksRef.current[index] = el }}
                 href={`/${item.toLowerCase().replace(' ', '-')}`}
-                className="group relative inline-block text-[#282828] text-4xl md:text-5xl transition-[letter-spacing,color] duration-300 hover:text-[#583929] hover:tracking-wide"
+                className="group relative inline-block text-white text-3xl md:text-4xl transition-colors duration-300 hover:text-[#C5A065]"
                 style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item}
                 <span
-                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-0 transition-transform duration-400 ease-out group-hover:scale-x-100"
+                  className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-400 ease-out group-hover:w-full"
                   style={{ backgroundColor: GOLD }}
                 />
               </a>
@@ -296,17 +254,17 @@ export default function Header() {
           </nav>
 
           {/* Sidebar Footer / CTA */}
-          <div ref={sidebarCtaRef} className="pt-8 border-t border-[#282828]/10">
+          <div ref={sidebarCtaRef} className="pt-8 border-t border-white/5">
             <button
-              className="w-full font-medium tracking-[0.2em] text-[#F6F6F6] bg-[#282828] px-8 py-4 rounded-full transition-all duration-300 uppercase text-sm hover:bg-[#583929] hover:tracking-[0.24em]"
-              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+              className="w-full font-serif font-medium text-[#121212] bg-[#C5A065] px-8 py-4 rounded-none transition-all duration-300 uppercase text-sm hover:bg-white hover:text-[#121212]"
+              style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
               onClick={() => setMobileMenuOpen(false)}
             >
               Request Invitation
             </button>
 
             <p
-              className="text-center text-[#282828]/60 text-xs mt-6"
+              className="text-center text-white/40 text-xs mt-6 font-sans"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
             >
               Helping women build a Kingdom legacy through faith, wisdom and leadership.

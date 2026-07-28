@@ -2,41 +2,31 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Mail, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Mail } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function NewsletterSection() {
+const GOLD = '#C5A065';
+
+export default function JoinSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Section entrance animations
-      gsap.fromTo('.news-label', 
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.news-label', start: 'top 85%' } }
-      );
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      gsap.fromTo('.news-heading', 
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.news-heading', start: 'top 85%' }, delay: 0.1 }
-      );
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 75%',
+          toggleActions: 'play none none reverse',
+        },
+        defaults: { ease: 'expo.out' },
+      });
 
-      gsap.fromTo('.news-subtext', 
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.news-subtext', start: 'top 85%' }, delay: 0.2 }
-      );
-
-      gsap.fromTo('.news-form-container', 
-        { opacity: 0, y: 40, scale: 0.98 },
-        { opacity: 1, y: 0, scale: 1, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.news-form-container', start: 'top 80%' }, delay: 0.3 }
-      );
-
-      gsap.fromTo('.news-trust', 
-        { opacity: 0, y: 10 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.news-trust', start: 'top 90%' }, delay: 0.5 }
-      );
-
+      tl.from('.join-heading', { opacity: 0, y: 40, duration: 1.2 })
+        .from('.join-subtext', { opacity: 0, y: 20, duration: 1 }, '-=0.8')
+        .from('.join-form-group', { opacity: 0, y: 30, duration: 1 }, '-=0.6');
     }, sectionRef);
 
     return () => ctx.revert();
@@ -45,84 +35,66 @@ export default function NewsletterSection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative bg-[#F6F6F6] py-24 md:py-32 lg:py-40 overflow-hidden"
+      className="relative bg-[#121212] py-24 md:py-32 lg:py-40 overflow-hidden"
     >
-      {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F6F6F6] via-[#DDD9CE]/20 to-[#F6F6F6] opacity-50 pointer-events-none"></div>
+      {/* Subtle background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#C5A065]/[0.03] rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 md:px-6 text-center">
         
-        {/* Elegant Invitation Card */}
-        <div className="news-form-container max-w-4xl mx-auto bg-white border border-[#282828]/10 rounded-sm p-8 md:p-16 lg:p-20 shadow-[0_20px_60px_-15px_rgba(40,40,40,0.05)] relative overflow-hidden">
+        {/* Heading */}
+        <h2 
+          className="join-heading text-white text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-6 tracking-tight"
+          style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+        >
+          Join the Inner Circle
+        </h2>
+
+        {/* Subtext */}
+        <p 
+          className="join-subtext text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-12 md:mb-16"
+          style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+        >
+          Curated wisdom, exclusive insights, and a community of women building Kingdom legacy together.
+        </p>
+
+        {/* Form Group */}
+        <div className="join-form-group flex flex-col sm:flex-row gap-4 max-w-xl mx-auto items-center justify-center">
           
-          {/* Decorative Corner Elements */}
-          <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-[#583929]/20"></div>
-          <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-[#583929]/20"></div>
-
-          {/* Header */}
-          <div className="text-center mb-12 md:mb-16">
-            <p 
-              className="news-label text-[#475D66] text-xs md:text-sm tracking-[0.25em] uppercase mb-6"
+          {/* Email Input */}
+          <div className="relative w-full sm:flex-1 group">
+            <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 transition-colors duration-300 group-focus-within:text-[#C5A065]" />
+            <input 
+              type="email" 
+              placeholder="Enter your email address"
+              className="w-full bg-[#1a1a1a] border border-white/10 rounded-sm py-4 pl-12 pr-4 text-white placeholder:text-gray-600 focus:outline-none focus:border-[#C5A065] transition-all duration-300"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-            >
-              08 — The Invitation
-            </p>
-            <h2 
-              className="news-heading text-[#282828] text-4xl md:text-5xl lg:text-6xl font-normal tracking-wide mb-6"
-              style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-            >
-              Join the Inner Circle
-            </h2>
-            <p 
-              className="news-subtext text-[#453E33]/80 text-base md:text-lg leading-relaxed max-w-2xl mx-auto"
-              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-            >
-              Receive weekly insights on faith, wisdom, and building a Kingdom legacy. 
-              No noise, just grace and purpose delivered to your inbox.
-            </p>
+            />
           </div>
 
-          {/* Form */}
-          <form className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto mb-10" onSubmit={(e) => e.preventDefault()}>
-            <div className="relative flex-1">
-              <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#453E33]/40" />
-              <input 
-                type="email" 
-                placeholder="Enter your email address"
-                className="w-full bg-[#F6F6F6] border border-[#282828]/10 rounded-sm py-4 pl-12 pr-4 text-[#282828] placeholder:text-[#453E33]/40 focus:outline-none focus:border-[#583929] focus:ring-1 focus:ring-[#583929]/20 transition-all duration-300"
-                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-              />
-            </div>
-            <button 
-              type="submit"
-              className="group relative bg-[#282828] text-[#F6F6F6] px-8 py-4 rounded-sm font-medium tracking-wide hover:bg-[#583929] transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden"
-              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Request Invitation
-                <ArrowRight size={16} className="transform transition-transform duration-300 group-hover:translate-x-1" />
-              </span>
-            </button>
-          </form>
-
-          {/* Trust Indicators */}
-          <div className="news-trust flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 text-[#453E33]/60 text-xs md:text-sm" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
+          {/* Gold CTA Button */}
+          <button 
+            type="submit"
+            className="group relative w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 bg-[#C5A065] text-[#121212] text-xs uppercase tracking-[0.2em] font-semibold hover:bg-[#D4B07A] transition-all duration-300 whitespace-nowrap"
+            style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+          >
             <span className="flex items-center gap-2">
-              <CheckCircle2 size={14} className="text-[#583929]" />
-              Weekly Kingdom insights
+              Request Invitation
+              <ArrowRight size={16} className="transform transition-transform duration-300 group-hover:translate-x-1" />
             </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle2 size={14} className="text-[#583929]" />
-              Exclusive early access
-            </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle2 size={14} className="text-[#583929]" />
-              Unsubscribe anytime
-            </span>
-          </div>
+          </button>
 
         </div>
+
+        {/* Trust Note */}
+        <p className="mt-8 text-gray-600 text-xs tracking-wide">
+          No spam. Unsubscribe anytime.
+        </p>
+
       </div>
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 md:h-40 bg-gradient-to-t from-[#121212] to-transparent pointer-events-none" />
     </section>
   );
 }

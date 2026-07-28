@@ -14,9 +14,9 @@ export default function Home() {
       <AboutSection />
       <CoreValuesSection />
       <FaithVisionSection />
-      <TestimonialsSection />
-      <PodcastSection />
       <JournalSection />
+      <PodcastSection />
+      <TestimonialsSection />
       <NewsletterSection />
     </main>
   );

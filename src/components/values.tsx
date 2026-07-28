@@ -2,16 +2,14 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ArrowRight, Plus } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Same gold hairline used across the site — the recurring "legacy line" signature.
 const GOLD = '#B08C5A';
 
 export default function CoreValuesSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const iconRefs = useRef<Array<HTMLSpanElement | null>>([]);
 
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
@@ -23,17 +21,16 @@ export default function CoreValuesSection() {
 
       gsap.fromTo(
         '.values-label',
-        { opacity: 0, x: -24 },
+        { opacity: 0, y: 16 },
         {
           opacity: 1,
-          x: 0,
+          y: 0,
           duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         }
       );
 
-      // Heading: per-line mask reveal, same technique as the hero
       gsap.fromTo(
         '.values-heading-line',
         { yPercent: 110 },
@@ -59,30 +56,16 @@ export default function CoreValuesSection() {
         }
       );
 
-      // Row dividers draw in first, establishing the list's structure,
-      // then each row's content fades up in sequence.
       gsap.fromTo(
-        '.value-divider',
-        { scaleX: 0 },
-        {
-          scaleX: 1,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: 0.12,
-          scrollTrigger: { trigger: '.values-list', start: 'top 85%' },
-        }
-      );
-      gsap.fromTo(
-        '.value-row',
-        { opacity: 0, y: 28 },
+        '.value-card',
+        { opacity: 0, y: 40 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.9,
           stagger: 0.12,
           ease: 'power3.out',
-          delay: 0.1,
-          scrollTrigger: { trigger: '.values-list', start: 'top 85%' },
+          scrollTrigger: { trigger: '.values-grid', start: 'top 85%' },
         }
       );
 
@@ -94,7 +77,7 @@ export default function CoreValuesSection() {
           y: 0,
           duration: 0.8,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.values-signature', start: 'top 88%' },
+          scrollTrigger: { trigger: '.values-signature', start: 'top 90%' },
         }
       );
 
@@ -106,7 +89,7 @@ export default function CoreValuesSection() {
           x: 0,
           duration: 0.8,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.values-cta', start: 'top 90%' },
+          scrollTrigger: { trigger: '.values-cta', start: 'top 92%' },
         }
       );
     }, sectionRef);
@@ -114,27 +97,18 @@ export default function CoreValuesSection() {
     return () => ctx.revert();
   }, [prefersReducedMotion]);
 
-  const handleEnter = (i: number) => {
-    if (prefersReducedMotion || window.innerWidth < 1024) return;
-    gsap.to(iconRefs.current[i], { rotate: 45, duration: 0.4, ease: 'back.out(2)' });
-  };
-  const handleLeave = (i: number) => {
-    if (prefersReducedMotion || window.innerWidth < 1024) return;
-    gsap.to(iconRefs.current[i], { rotate: 0, duration: 0.4, ease: 'power2.out' });
-  };
-
   const values = [
     {
-      title: 'Integrity',
+      title: 'Integrity & Honor',
       description: 'Serving with an unwavering commitment to trust, discretion, and the highest ethical standards.',
     },
     {
-      title: 'Purposeful Impact',
+      title: 'Visionary Stewardship',
       description: 'Developing enduring strategies that generate positive, lasting change for organizations and individuals.',
     },
     {
-      title: 'Compassionate Leadership',
-      description: 'Empowering others with empathy, wisdom, and a vision for common good.',
+      title: 'Generational Impact',
+      description: 'Empowering others with empathy, wisdom, and a vision for common good that spans generations.',
     },
     {
       title: 'Innovative Stewardship',
@@ -152,31 +126,28 @@ export default function CoreValuesSection() {
       data-section-label="Core Values"
       className="relative bg-[#282828] py-24 md:py-32 lg:py-40 overflow-hidden"
     >
-      <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
+      {/* Ambient background glow, echoing the gold light behind each card number */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-40"
+        style={{
+          background: `radial-gradient(ellipse 60% 40% at 50% 30%, ${GOLD}1a, transparent 70%)`,
+        }}
+      />
 
-        <p
-          className="values-label text-[#DDD9CE]/60 text-xs md:text-sm tracking-[0.25em] uppercase mb-8 md:mb-12"
-          style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-        >
-          03 — Core Values
-        </p>
+      <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 relative">
 
-        {/* Heading + intro, left-aligned to match the rest of the site's
-            typographic system rather than a centered all-caps block. */}
-        <div className="values-heading grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 lg:gap-16 items-end mb-16 md:mb-20">
+        {/* Centered heading + intro */}
+        <div className="values-heading text-center max-w-2xl mx-auto mb-16 md:mb-20">
           <h2
             className="text-[#F6F6F6] text-4xl md:text-5xl lg:text-6xl font-normal leading-[1.15]"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">
-              <span className="values-heading-line block">The values that</span>
-            </span>
-            <span className="block overflow-hidden">
-              <span className="values-heading-line block italic text-[#DDD9CE]">steady the work.</span>
+              <span className="values-heading-line block">Core Values</span>
             </span>
           </h2>
           <p
-            className="values-intro text-[#DDD9CE]/70 text-sm md:text-base leading-relaxed lg:pb-2"
+            className="values-intro text-[#DDD9CE]/70 text-sm md:text-base leading-relaxed mt-5"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
             Five commitments that shape every program, every conversation, and
@@ -184,66 +155,46 @@ export default function CoreValuesSection() {
           </p>
         </div>
 
-        {/* Manifesto list — rows instead of cards, expand on hover to reveal
-            the description. On touch/narrow screens the description is
-            simply always visible (no hover-dependent content). */}
-        <div className="values-list border-t border-[#DDD9CE]/15">
+        {/* Card grid */}
+        <div className="values-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {values.map((value, i) => (
             <div
               key={value.title}
-              className="value-row group relative border-b border-[#DDD9CE]/15 py-7 md:py-9"
-              onMouseEnter={() => handleEnter(i)}
-              onMouseLeave={() => handleLeave(i)}
+              className="value-card group relative border border-[#DDD9CE]/15 rounded-sm px-7 py-9 md:px-8 md:py-10 transition-colors duration-300 hover:border-[#B08C5A]/50"
+              style={{ backgroundColor: '#2E2E2E' }}
             >
-              <span
-                className="value-divider absolute left-0 top-0 h-px w-full origin-left"
-                style={{ backgroundColor: GOLD, opacity: 0.4, transform: 'scaleX(0)' }}
+              {/* Glow behind the number */}
+              <div
+                className="absolute top-6 left-6 w-16 h-16 rounded-full pointer-events-none opacity-70 blur-xl transition-opacity duration-300 group-hover:opacity-100"
+                style={{ backgroundColor: `${GOLD}33` }}
               />
 
-              <div className="flex items-start justify-between gap-6 md:gap-10">
-                <div className="flex items-baseline gap-4 md:gap-8">
-                  <span
-                    className="text-[#DDD9CE]/30 text-xs md:text-sm tracking-[0.1em] tabular-nums pt-1"
-                    style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                  >
-                    0{i + 1}
-                  </span>
-                  <h3
-                    className="text-[#F6F6F6] text-xl md:text-2xl lg:text-3xl transition-colors duration-300 group-hover:text-[#DDD9CE]"
-                    style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-                  >
-                    {value.title}
-                  </h3>
-                </div>
+              <span
+                className="relative block text-4xl md:text-5xl mb-6"
+                style={{ color: GOLD, fontFamily: 'var(--font-eb-garamond), serif' }}
+              >
+                0{i + 1}
+              </span>
 
-                <span
-                  ref={(el) => {
-                    iconRefs.current[i] = el;
-                  }}
-                  className="hidden lg:inline-flex mt-2 shrink-0 text-[#DDD9CE]/50 transition-colors duration-300 group-hover:text-[#DDD9CE]"
-                >
-                  <Plus size={18} strokeWidth={1.5} />
-                </span>
-              </div>
+              <h3
+                className="relative text-[#F6F6F6] text-xl md:text-2xl leading-snug mb-3"
+                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+              >
+                {value.title}
+              </h3>
 
-              {/* Description: CSS grid-rows trick for a smooth, robust
-                  expand/collapse — no JS height measuring required. */}
-              <div className="grid transition-[grid-template-rows] duration-500 ease-out grid-rows-[1fr] lg:grid-rows-[0fr] lg:group-hover:grid-rows-[1fr]">
-                <div className="overflow-hidden">
-                  <p
-                    className="text-[#DDD9CE]/70 text-sm md:text-base leading-relaxed max-w-xl pt-4 md:pt-5 pl-0 lg:pl-[3.1rem]"
-                    style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                  >
-                    {value.description}
-                  </p>
-                </div>
-              </div>
+              <p
+                className="relative text-[#DDD9CE]/65 text-sm leading-relaxed"
+                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+              >
+                {value.description}
+              </p>
             </div>
           ))}
         </div>
 
         {/* Signature and CTA */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-12 md:pt-16">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-16 md:pt-20">
           <p
             className="values-signature text-[#DDD9CE] text-5xl md:text-6xl"
             style={{ fontFamily: 'var(--font-signature), cursive' }}

@@ -2,8 +2,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-// Same gold hairline used in the header — the recurring "legacy line" signature.
-const GOLD = '#B08C5A';
+// Updated Gold color to match the reference design's metallic accent
+const GOLD = '#C5A065'; 
 
 export default function Hero() {
   const heroRef = useRef<HTMLElement>(null);
@@ -22,52 +22,49 @@ export default function Hero() {
 
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
 
-      // Slow continuous Ken Burns drift on the background — runs independently
-      // of the entrance timeline so it never "finishes" and stalls.
+      // Slow continuous Ken Burns drift on the background
       if (bgRef.current) {
         gsap.fromTo(
           bgRef.current,
-          { scale: 1.12 },
-          { scale: 1, duration: 6, ease: 'power1.out' }
+          { scale: 1.1 },
+          { scale: 1, duration: 8, ease: 'power1.out', repeat: -1, yoyo: true }
         );
       }
 
       tl.from('.hero-label', {
         opacity: 0,
         y: 24,
-        duration: 0.9,
+        duration: 1,
       })
-        // Per-line mask reveal. Each line sits in its own overflow-hidden
-        // wrapper, so translating the inner span up from below the mask
-        // reads as a clean reveal rather than a fade.
+        // Per-line mask reveal
         .fromTo(
           '.hero-headline-line',
           { yPercent: 110 },
-          { yPercent: 0, duration: 1.1, stagger: 0.14 },
-          '-=0.5'
+          { yPercent: 0, duration: 1.2, stagger: 0.15 },
+          '-=0.6'
         )
         .fromTo(
           goldLineRef.current,
           { scaleX: 0 },
-          { scaleX: 1, duration: 0.9, ease: 'power3.out', transformOrigin: 'left center' },
-          '-=0.6'
+          { scaleX: 1, duration: 1, ease: 'power3.out', transformOrigin: 'center center' },
+          '-=0.7'
         )
         .from(
           '.hero-subtitle',
-          { opacity: 0, y: 20, duration: 0.9 },
-          '-=0.5'
+          { opacity: 0, y: 20, duration: 1 },
+          '-=0.6'
         )
         .from(
           '.hero-buttons',
-          { opacity: 0, y: 16, duration: 0.8, stagger: 0.08 },
-          '-=0.5'
+          { opacity: 0, y: 16, duration: 0.9, stagger: 0.1 },
+          '-=0.6'
         );
     }, heroRef);
 
     return () => ctx.revert();
   }, [prefersReducedMotion]);
 
-  // Magnetic hover on both CTAs — same feel as the header's Request button.
+  // Magnetic hover effect for buttons
   useEffect(() => {
     if (prefersReducedMotion) return;
     const buttons = [button1Ref.current, button2Ref.current].filter(Boolean) as HTMLButtonElement[];
@@ -79,8 +76,8 @@ export default function Hero() {
 
       const handleMove = (e: MouseEvent) => {
         const rect = btn.getBoundingClientRect();
-        quickX((e.clientX - (rect.left + rect.width / 2)) * 0.2);
-        quickY((e.clientY - (rect.top + rect.height / 2)) * 0.3);
+        quickX((e.clientX - (rect.left + rect.width / 2)) * 0.15);
+        quickY((e.clientY - (rect.top + rect.height / 2)) * 0.2);
       };
       const handleLeave = () => {
         gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
@@ -98,84 +95,53 @@ export default function Hero() {
   }, [prefersReducedMotion]);
 
   return (
-    <section ref={heroRef} className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background layer, isolated so it can scale (Ken Burns) independently
-          of everything else in the section. */}
+    <section 
+      ref={heroRef} 
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#121212]"
+    >
+      {/* Background layer with Ken Burns effect */}
       <div
-        ref={bgRef}
-        className="absolute inset-0 bg-[url('/banner1.webp')] bg-cover bg-top bg-no-repeat"
+        className="absolute inset-0 bg-[url('/banner.png')] bg-cover bg-center bg-no-repeat opacity-60"
         style={{ transformOrigin: 'center center' }}
       />
 
-      {/* Subtle dark overlay to ensure text readability */}
-      <div className="absolute inset-0 bg-[#282828]/20"></div>
-
-      {/* BOTTOM MERGE LAYER: fades the hero image into the next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 md:h-44 bg-gradient-to-t from-[#2D241E] via-[#2D241E]/70 to-transparent z-0 pointer-events-none"></div>
+      {/* Dark overlay to ensure text readability against the background */}
+      {/* <div className="absolute inset-0 bg-gradient-to-b from-[#121212]/40 via-[#121212]/20 to-[#121212]"></div> */}
 
       {/* Content Container */}
-      <div className="relative z-10 w-full max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 py-20">
-        <div className="flex justify-end">
-          <div className="max-w-2xl lg:max-w-3xl">
+      <div className="relative z-10 w-full max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 pb-20 pt-[50vh]">
+        <div className="max-w-4xl ml-auto">
 
-            <p
-              className="hero-label text-[#F6F6F6] text-lg md:text-xl mb-4 md:mb-6"
-              style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-            >
-              Cormorant Garamond
-            </p>
+          {/* Headline — masked reveal */}
+          <h1
+            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.15] mb-6 md:mb-8"
+            style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+          >
+            <span className="block overflow-hidden">
+              <span className="hero-headline-line block">The quiet leadership</span>
+            </span>
+            <span className="block overflow-hidden">
+              <span className="hero-headline-line block">that builds an enduring</span>
+            </span>
+            <span className="block overflow-hidden">
+              <span className="hero-headline-line block">Kingdom legacy.</span>
+            </span>
+          </h1>
 
-            {/* Headline — each line masked for a clean reveal */}
-            <h1
-              className="text-[#F6F6F6] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal leading-[1.1] md:leading-[1.15] lg:leading-[1.2] mb-3 md:mb-4"
-              style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-            >
-              <span className="block overflow-hidden">
-                <span className="hero-headline-line block">The quiet leadership</span>
-              </span>
-              <span className="block overflow-hidden">
-                <span className="hero-headline-line block">that builds an enduring</span>
-              </span>
-              <span className="block overflow-hidden">
-                <span className="hero-headline-line block">Kingdom legacy.</span>
-              </span>
-            </h1>
-
-            {/* Gold legacy line — same signature accent as the header */}
+          {/* Centered Gold legacy line */}
+          <div className="flex justify-center mb-8 md:mb-10">
             <span
               ref={goldLineRef}
-              className="block h-px w-24 md:w-32 mb-6 md:mb-8 origin-left"
+              className="block h-px w-24 md:w-32 origin-center"
               style={{ backgroundColor: GOLD, transform: 'scaleX(0)' }}
             />
-
-            <p
-              className="hero-subtitle text-[#F6F6F6]/90 text-base md:text-lg lg:text-xl leading-relaxed mb-10 md:mb-12 max-w-xl"
-              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-            >
-              A curated journey of faith and wisdom for international women of influence.
-            </p>
-
-            <div className="flex flex-wrap gap-4 md:gap-6">
-              <button
-                ref={button1Ref}
-                className="hero-buttons group relative px-6 md:px-8 py-3 md:py-4 bg-[#453E33] text-[#F6F6F6] text-xs md:text-sm font-medium tracking-wide rounded-sm transition-all duration-300 hover:bg-[#583929] hover:tracking-wider"
-                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-              >
-                Explore the Vision
-              </button>
-
-              <button
-                ref={button2Ref}
-                className="hero-buttons group relative px-6 md:px-8 py-3 md:py-4 bg-[#F6F6F6] text-[#282828] text-xs md:text-sm font-medium tracking-wide rounded-sm transition-all duration-300 hover:bg-[#DDD9CE] hover:tracking-wider"
-                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-              >
-                Read the Journal
-              </button>
-            </div>
-
           </div>
+
         </div>
       </div>
+
+      {/* Bottom fade to blend seamlessly into next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 md:h-40 bg-gradient-to-t from-[#121212] to-transparent z-10 pointer-events-none"></div>
     </section>
   );
 }
