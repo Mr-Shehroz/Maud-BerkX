@@ -6,222 +6,366 @@ import { ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Same gold hairline used across the site — the recurring "legacy line" signature.
+const GOLD = '#B08C5A';
+
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  const imageInnerRef = useRef<HTMLDivElement>(null);
+  const goldVertRef = useRef<HTMLSpanElement>(null);
+  const captionRef = useRef<HTMLDivElement>(null);
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.about-label',
-        { opacity: 0, x: -30 },
+      if (prefersReducedMotion) {
+        gsap.set('.about-reveal, .about-pull-line, .about-philosophy-item', {
+          opacity: 1,
+          y: 0,
+          yPercent: 0,
+        });
+        gsap.set(imageWrapRef.current, { clipPath: 'inset(0 0 0% 0)' });
+        return;
+      }
+
+      gsap.fromTo(
+        '.about-label',
+        { opacity: 0, x: -24 },
         {
           opacity: 1,
           x: 0,
           duration: 0.8,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-label', start: 'top 85%' }
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         }
       );
 
-      gsap.fromTo('.about-image-frame',
-        { opacity: 0, scale: 0.95 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-image-frame', start: 'top 85%' },
-          delay: 0.2
-        }
-      );
+      // Image: curtain wipe reveal, then a slow drift for the rest of the
+      // section's scroll life (works nicely alongside the CSS sticky pin).
+      if (imageWrapRef.current && imageInnerRef.current) {
+        gsap.fromTo(
+          imageWrapRef.current,
+          { clipPath: 'inset(0 0 100% 0)' },
+          {
+            clipPath: 'inset(0 0 0% 0)',
+            duration: 1.3,
+            ease: 'expo.inOut',
+            scrollTrigger: { trigger: imageWrapRef.current, start: 'top 82%' },
+          }
+        );
+        gsap.fromTo(
+          imageInnerRef.current,
+          { scale: 1.15, yPercent: -5 },
+          {
+            scale: 1,
+            yPercent: 5,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: 1,
+            },
+          }
+        );
+      }
 
-      gsap.fromTo('.philosophy-card',
-        { opacity: 0, y: 40 },
+      if (goldVertRef.current) {
+        gsap.fromTo(
+          goldVertRef.current,
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            duration: 1.2,
+            ease: 'power3.out',
+            transformOrigin: 'top center',
+            delay: 0.3,
+            scrollTrigger: { trigger: imageWrapRef.current, start: 'top 82%' },
+          }
+        );
+      }
+
+      gsap.fromTo(
+        captionRef.current,
+        { opacity: 0, y: 12 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
-          stagger: 0.15,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.philosophy-card', start: 'top 85%' }
+          delay: 0.6,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: imageWrapRef.current, start: 'top 82%' },
         }
       );
 
-      gsap.fromTo('.about-subtitle',
-        { opacity: 0, y: 30 },
+      // Drop cap settles a beat before the rest of the quote
+      gsap.fromTo(
+        '.about-drop-cap',
+        { opacity: 0, y: -8 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.about-pull-quote', start: 'top 82%' },
+        }
+      );
+
+      gsap.fromTo(
+        '.about-pull-line',
+        { yPercent: 110 },
+        {
+          yPercent: 0,
+          duration: 1,
+          stagger: 0.12,
+          ease: 'expo.out',
+          delay: 0.15,
+          scrollTrigger: { trigger: '.about-pull-quote', start: 'top 82%' },
+        }
+      );
+
+      gsap.fromTo(
+        '.about-eyebrow-quote',
+        { opacity: 0, y: 16 },
         {
           opacity: 1,
           y: 0,
           duration: 0.8,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-subtitle', start: 'top 85%' },
-          delay: 0.4
+          scrollTrigger: { trigger: '.about-pull-quote', start: 'top 82%' },
         }
       );
 
-      gsap.fromTo('.about-description',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-description', start: 'top 85%' },
-          delay: 0.5
-        }
-      );
-
-      gsap.fromTo('.about-signature',
+      gsap.fromTo(
+        '.about-expand',
         { opacity: 0, y: 20 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.8,
+          duration: 0.9,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-signature', start: 'top 85%' },
-          delay: 0.6
+          scrollTrigger: { trigger: '.about-expand', start: 'top 85%' },
         }
       );
 
-      gsap.fromTo('.about-cta',
-        { opacity: 0, x: 20 },
+      gsap.fromTo(
+        '.about-signature',
+        { opacity: 0, y: 16 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '.about-signature', start: 'top 88%' },
+        }
+      );
+
+      gsap.fromTo(
+        '.about-philosophy-divider',
+        { scaleY: 0 },
+        {
+          scaleY: 1,
+          duration: 0.9,
+          ease: 'power3.out',
+          stagger: 0.12,
+          scrollTrigger: { trigger: '.about-philosophy-row', start: 'top 85%' },
+        }
+      );
+      gsap.fromTo(
+        '.about-philosophy-item',
+        { opacity: 0, y: 24 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.12,
+          ease: 'power3.out',
+          delay: 0.1,
+          scrollTrigger: { trigger: '.about-philosophy-row', start: 'top 85%' },
+        }
+      );
+
+      gsap.fromTo(
+        '.about-cta',
+        { opacity: 0, x: 16 },
         {
           opacity: 1,
           x: 0,
           duration: 0.8,
           ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-cta', start: 'top 85%' },
-          delay: 0.7
+          scrollTrigger: { trigger: '.about-cta', start: 'top 90%' },
         }
       );
-
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [prefersReducedMotion]);
 
   const philosophies = [
-    {
-      title: 'INTEGRITY',
-      description: 'Create integrity and empower leaders in comfortability.'
-    },
-    {
-      title: 'PURPOSE',
-      description: 'Building innovation, purpose, and vision.'
-    },
-    {
-      title: 'SERVICE',
-      description: 'Focuses on service and serving every client community.'
-    }
+    { title: 'Integrity', description: 'Create integrity and empower leaders in comfortability.' },
+    { title: 'Purpose', description: 'Building innovation, purpose, and vision.' },
+    { title: 'Service', description: 'Focuses on service and serving every client community.' },
   ];
 
   return (
     <section
       ref={sectionRef}
+      data-section-label="About the Founder"
       className="relative bg-[#F6F6F6] py-24 md:py-32 lg:py-40 overflow-hidden"
     >
       <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
 
-        {/* Section Label */}
-        <div className="about-label mb-16 md:mb-20">
-          <p
-            className="text-[#475D66] text-xs md:text-sm tracking-[0.25em] uppercase"
-            style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-          >
-            02 — About the Founder
-          </p>
-        </div>
+        <p
+          className="about-label text-[#475D66] text-xs md:text-sm tracking-[0.25em] uppercase mb-16 md:mb-20"
+          style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+        >
+          02 — About the Founder
+        </p>
 
-        {/* TOP ROW: Image (left) + Philosophy Cards (right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-16 lg:mb-20">
+        {/* Left column stays put (position: sticky) while the right column
+            scrolls past it — the reason this needs to be its own grid rather
+            than items-start / items-center. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-14 lg:gap-24">
 
-          {/* Left: Image */}
-          <div className="about-image-frame">
-            <div className="border border-[#282828]/20 p-2 md:p-3">
-              <div className="overflow-hidden">
+          {/* Left: pinned image */}
+          <div className="relative lg:sticky lg:top-28 self-start h-fit">
+            <div
+              ref={imageWrapRef}
+              className="relative h-[420px] md:h-[520px] lg:h-[600px] overflow-hidden"
+            >
+              <div ref={imageInnerRef} className="absolute inset-[-4%]">
                 <img
                   src="/banner.webp"
-                  alt="Maud Berkx - Founder"
-                  className="w-full h-[350px] md:h-[400px] lg:h-[450px] object-cover object-top"
+                  alt="Maud Berkx — Founder"
+                  className="w-full h-full object-cover object-top"
                 />
               </div>
             </div>
-          </div>
-
-          {/* Right: Philosophy Cards */}
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-              {philosophies.map((item, index) => (
-                <div
-                  key={index}
-                  className="philosophy-card group border-t border-[#282828]/30 pt-6 hover:border-[#583929] transition-colors duration-500"
-                >
-                  <p
-                    className="text-[#475D66] text-[10px] md:text-[11px] tracking-[0.2em] uppercase mb-3"
-                    style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                  >
-                    Core Philosophies
-                  </p>
-                  <h4
-                    className="text-[#282828] text-sm md:text-base font-semibold tracking-[0.1em] uppercase mb-3"
-                    style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                  >
-                    {item.title}
-                  </h4>
-                  <p
-                    className="text-[#453E33]/80 text-xs md:text-sm leading-relaxed"
-                    style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                  >
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+            <span
+              ref={goldVertRef}
+              className="hidden lg:block absolute top-0 -right-8 w-px h-full origin-top"
+              style={{ backgroundColor: GOLD, transform: 'scaleY(0)' }}
+            />
+            <div ref={captionRef} className="mt-5">
+              <p
+                className="text-[#282828] text-sm tracking-[0.1em] uppercase"
+                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+              >
+                Maud Berkx
+              </p>
+              <p
+                className="text-[#453E33]/70 text-xs mt-1 italic"
+                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+              >
+                Founder &amp; Kingdom Legacy Strategist
+              </p>
             </div>
           </div>
-        </div>
 
-        {/* BOTTOM ROW: Text (left) + Signature & CTA (right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-
-          {/* Left: Text Content */}
-          <div className="space-y-6">
+          {/* Right: the story scrolls past the pinned image */}
+          <div className="relative pt-2 lg:pt-6">
             <p
-              className="about-subtitle text-[#583929] text-base md:text-lg italic"
+              className="about-eyebrow-quote text-[#583929] text-base md:text-lg italic mb-6"
               style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
             >
               The Grace Behind the Vision
             </p>
 
-            <h2
-              className="about-description text-[#282828] text-2xl md:text-3xl lg:text-[2rem] leading-[1.3] font-normal"
+            <div
+              className="about-pull-quote relative text-[#282828] text-2xl md:text-[1.9rem] lg:text-[2.15rem] leading-[1.4] font-normal"
               style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
             >
-              Maud Berkx is more than a strategist; she is a catalyst for enduring transformation. Rooted in wisdom and faith, her mission is to empower leaders to steward their influence with clarity, purpose, and profound grace.
-            </h2>
-          </div>
-
-          {/* Right: Signature + CTA */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 lg:pt-12">
-
-            <div className="about-signature">
-              <p
-                className="text-[#583929] text-5xl md:text-6xl lg:text-7xl"
-                style={{ fontFamily: 'var(--font-signature), cursive' }}
-              >
-                Maud Berkx
-              </p>
+              <span className="block overflow-hidden">
+                <span className="about-pull-line block">
+                  <span
+                    className="about-drop-cap float-left mr-2 leading-[0.85] text-[#583929]"
+                    style={{ fontSize: '4.2rem' }}
+                  >
+                    M
+                  </span>
+                  aud Berkx is more than a strategist;
+                </span>
+              </span>
+              <span className="block overflow-hidden">
+                <span className="about-pull-line block">she is a catalyst for enduring transformation.</span>
+              </span>
+              <span className="block overflow-hidden">
+                <span className="about-pull-line block">Rooted in wisdom and faith, her mission is to</span>
+              </span>
+              <span className="block overflow-hidden">
+                <span className="about-pull-line block">empower leaders to steward their influence with</span>
+              </span>
+              <span className="block overflow-hidden">
+                <span className="about-pull-line block">clarity, purpose, and profound grace.</span>
+              </span>
             </div>
 
-            <a
-              href="/about"
-              className="about-cta group flex items-center gap-2 text-[#282828] text-sm md:text-base hover:text-[#583929] transition-colors duration-300"
+            {/* Short expansion paragraph — gives the sticky image time to
+                breathe as the reader keeps scrolling. */}
+            <p
+              className="about-expand mt-8 text-[#453E33]/80 text-sm md:text-base leading-relaxed max-w-md"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
             >
-              <span className="border-b border-[#282828]/50 group-hover:border-[#583929] transition-colors duration-300 pb-0.5">
-                Discover the Journey.
-              </span>
-              <ArrowRight size={14} className="transform transition-transform duration-300 group-hover:translate-x-1" />
-            </a>
+              Her work sits at the intersection of conviction and craft — helping
+              women build something that outlasts trend and circumstance: a life,
+              and a leadership, built to hold weight.
+            </p>
 
+            <p
+              className="about-signature mt-10 text-[#583929] text-5xl md:text-6xl"
+              style={{ fontFamily: 'var(--font-signature), cursive' }}
+            >
+              Maud Berkx
+            </p>
+
+            {/* Philosophies */}
+            <div className="about-philosophy-row relative mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3">
+              {philosophies.map((item, index) => (
+                <div key={item.title} className="relative py-6 sm:py-0 sm:px-6 lg:px-8 first:pl-0 last:pr-0">
+                  {index !== 0 && (
+                    <span
+                      className="about-philosophy-divider hidden sm:block absolute left-0 top-0 h-full w-px origin-top"
+                      style={{ backgroundColor: '#282828', opacity: 0.12, transform: 'scaleY(0)' }}
+                    />
+                  )}
+                  <div className="about-philosophy-item group">
+                    <h4
+                      className="text-[#282828] text-sm md:text-base font-semibold tracking-[0.15em] uppercase mb-3 transition-[letter-spacing] duration-300 group-hover:tracking-[0.22em]"
+                      style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+                    >
+                      {item.title}
+                    </h4>
+                    <span
+                      className="block h-px w-8 mb-4 transition-all duration-300 group-hover:w-12"
+                      style={{ backgroundColor: GOLD }}
+                    />
+                    <p
+                      className="text-[#453E33]/80 text-sm leading-relaxed max-w-xs"
+                      style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+                    >
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-14 md:mt-16">
+              <a
+                href="/about"
+                className="about-cta group inline-flex items-center gap-2 text-[#282828] text-sm md:text-base transition-colors duration-300 hover:text-[#583929]"
+                style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+              >
+                <span className="border-b border-[#282828]/50 pb-0.5 transition-colors duration-300 group-hover:border-[#583929]">
+                  Discover the Journey.
+                </span>
+                <ArrowRight size={14} className="transform transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+            </div>
           </div>
         </div>
       </div>

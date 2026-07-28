@@ -3,117 +3,270 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
 
+// Thin gold hairline — the signature "legacy line" motif from Maud's brand mark.
+const GOLD = '#B08C5A';
+
 export default function Header() {
   const headerRef = useRef<HTMLElement>(null);
+  const logoRef = useRef<HTMLAnchorElement>(null);
+  const logoLineRef = useRef<HTMLSpanElement>(null);
+  const requestBtnRef = useRef<HTMLButtonElement>(null);
+  const menuIconRef = useRef<HTMLSpanElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const navLinksRef = useRef<Array<HTMLAnchorElement | null>>([]);
+  const sidebarCtaRef = useRef<HTMLDivElement>(null);
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    // GSAP entrance animation for header elements
-    const tl = gsap.timeline();
-    tl.from('.header-btn', { 
-      opacity: 0, 
-      x: -30, 
-      duration: 0.8, 
-      ease: 'power3.out' 
-    });
-    tl.from('.header-logo', { 
-      opacity: 0, 
-      y: -20, 
-      duration: 0.8, 
-      ease: 'power3.out' 
-    }, '-=0.6');
-    tl.from('.header-menu', { 
-      opacity: 0, 
-      x: 30, 
-      duration: 0.8, 
-      ease: 'power3.out' 
-    }, '-=0.6');
+  const navItems = ['Journal', 'Podcast', 'Speaking', 'Wisdom', 'Inquiry'];
 
-    // Scroll effect
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- Entrance sequence ----------
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+
+    tl.from('.header-btn', {
+      opacity: 0,
+      x: -24,
+      duration: 1,
+    })
+      .from(
+        logoRef.current,
+        {
+          opacity: 0,
+          y: -16,
+          filter: 'blur(6px)',
+          duration: 1.1,
+        },
+        '-=0.75'
+      )
+      .from(
+        '.header-menu',
+        {
+          opacity: 0,
+          x: 24,
+          duration: 1,
+        },
+        '-=0.9'
+      )
+      // Gold line draws outward from the center beneath the logo — the one
+      // deliberately "premium" flourish, everything else stays quiet.
+      .fromTo(
+        logoLineRef.current,
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1, ease: 'power3.out', transformOrigin: 'center' },
+        '-=0.5'
+      );
+
+    // Scroll state
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      tl.kill();
     };
+  }, [prefersReducedMotion]);
+
+  // ---------- Magnetic "Request Invitation" button ----------
+  useEffect(() => {
+    const btn = requestBtnRef.current;
+    if (!btn || prefersReducedMotion) return;
+
+    const quickX = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3.out' });
+    const quickY = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3.out' });
+
+    const handleMove = (e: MouseEvent) => {
+      const rect = btn.getBoundingClientRect();
+      const relX = e.clientX - (rect.left + rect.width / 2);
+      const relY = e.clientY - (rect.top + rect.height / 2);
+      quickX(relX * 0.25);
+      quickY(relY * 0.4);
+    };
+    const handleLeave = () => {
+      gsap.to(btn, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+    };
+
+    btn.addEventListener('mousemove', handleMove);
+    btn.addEventListener('mouseleave', handleLeave);
+    return () => {
+      btn.removeEventListener('mousemove', handleMove);
+      btn.removeEventListener('mouseleave', handleLeave);
+    };
+  }, [prefersReducedMotion]);
+
+  // ---------- Menu icon morph (hamburger <-> close) ----------
+  useEffect(() => {
+    if (!menuIconRef.current) return;
+    gsap.to(menuIconRef.current, {
+      rotate: mobileMenuOpen ? 90 : 0,
+      duration: 0.5,
+      ease: 'back.out(2)',
+    });
+  }, [mobileMenuOpen]);
+
+  // Establish the sidebar's closed position through GSAP itself (once, on
+  // mount). Doing this via a raw inline style instead caused GSAP's internal
+  // transform cache to desync from the DOM: gsap.to({ xPercent: 0 }) would
+  // think the panel was already at xPercent 0 and silently no-op, so the
+  // sidebar (and every nav link inside it) never actually slid into view.
+  useEffect(() => {
+    if (sidebarRef.current) {
+      gsap.set(sidebarRef.current, { xPercent: 100 });
+    }
   }, []);
 
-  const navItems = ['Journal', 'Podcast', 'Speaking', 'Wisdom', 'Inquiry'];
+  // ---------- Sidebar open/close timeline ----------
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+    const backdrop = backdropRef.current;
+    if (!sidebar || !backdrop) return;
+
+    const links = navLinksRef.current.filter(Boolean);
+
+    if (mobileMenuOpen) {
+      gsap.set(backdrop, { pointerEvents: 'auto' });
+      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      tl.to(backdrop, { opacity: 1, duration: 0.5 }, 0)
+        .to(sidebar, { xPercent: 0, duration: 0.85 }, 0)
+        .fromTo(
+          links,
+          { x: 36, autoAlpha: 0 },
+          { x: 0, autoAlpha: 1, duration: 0.7, stagger: 0.07 },
+          0.25
+        )
+        .fromTo(
+          sidebarCtaRef.current,
+          { y: 16, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.6 },
+          '-=0.35'
+        );
+    } else {
+      gsap.to(sidebar, { xPercent: 100, duration: 0.6, ease: 'power3.in' });
+      gsap.to(backdrop, {
+        opacity: 0,
+        duration: 0.4,
+        onComplete: () => gsap.set(backdrop, { pointerEvents: 'none' }),
+      });
+    }
+  }, [mobileMenuOpen]);
+
+  // Close on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <>
       {/* Full-Width Header */}
-      <header 
+      <header
         ref={headerRef}
         className={`fixed top-0 left-0 w-full z-40 transition-all duration-500 ${
-          scrolled 
-            ? 'bg-[#F6F6F6]/95 backdrop-blur-md shadow-md' 
+          scrolled
+            ? 'bg-[#F6F6F6]/95 backdrop-blur-md shadow-[0_1px_0_0_rgba(40,40,40,0.08)]'
             : 'bg-[#F6F6F6]'
         }`}
       >
-        {/* Applied requested container sizing */}
         <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
-          <div className="flex items-center justify-between h-20 md:h-24">
-            
+          <div
+            className={`flex items-center justify-between transition-all duration-500 ${
+              scrolled ? 'h-16 md:h-20' : 'h-20 md:h-24'
+            }`}
+          >
             {/* Left: Request Invitation Button */}
-            <button 
-              className="header-btn font-medium text-[#F6F6F6] bg-[#282828] px-6 md:px-8 py-3 rounded-full hover:bg-[#583929] transition-all duration-300 whitespace-nowrap text-xs md:text-sm hidden lg:block"
+            <button
+              ref={requestBtnRef}
+              className="header-btn relative font-medium text-[#F6F6F6] bg-[#282828] px-6 md:px-8 py-3 rounded-full transition-colors duration-300 whitespace-nowrap text-xs md:text-sm hidden lg:block hover:bg-[#583929]"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
             >
               Request Invitation
             </button>
 
             {/* Center: Logo */}
-            <a 
-              href="/" 
-              className="header-logo font-semibold tracking-[0.2em] text-[#282828] uppercase text-xl md:text-2xl lg:text-3xl"
-              style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+            <a
+              ref={logoRef}
+              href="/"
+              className="header-logo group relative inline-flex flex-col items-center leading-none"
             >
-              Maud Berkx
+              <span
+                className="font-semibold tracking-[0.2em] text-[#282828] uppercase text-xl md:text-2xl lg:text-3xl transition-[letter-spacing] duration-500 group-hover:tracking-[0.26em]"
+                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+              >
+                Maud Berkx
+              </span>
+              <span
+                ref={logoLineRef}
+                className="mt-1.5 h-px w-full origin-center"
+                style={{ backgroundColor: GOLD, transform: 'scaleX(0)' }}
+              />
             </a>
 
             {/* Right: Menu Button */}
-            <button 
-              className="header-menu flex items-center gap-3 font-medium tracking-[0.15em] text-[#282828] uppercase hover:text-[#583929] transition-colors duration-300 text-xs md:text-sm"
+            <button
+              className="header-menu flex items-center gap-3 font-medium tracking-[0.15em] text-[#282828] uppercase transition-colors duration-300 text-xs md:text-sm hover:text-[#583929]"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
               onClick={() => setMobileMenuOpen(true)}
             >
-              <span className="hidden md:inline">Menu</span>
-              <Menu size={20} />
+              <span className="hidden md:inline relative">
+                Menu
+                <span
+                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
+                  style={{ backgroundColor: GOLD }}
+                />
+              </span>
+              <span ref={menuIconRef} className="inline-flex">
+                <Menu size={20} />
+              </span>
             </button>
           </div>
         </div>
+
+        {/* Scroll-state hairline, same gold accent as the logo's legacy line */}
+        <div
+          className="h-px w-full origin-left transition-transform duration-500"
+          style={{
+            backgroundColor: GOLD,
+            transform: scrolled ? 'scaleX(1)' : 'scaleX(0)',
+            opacity: 0.35,
+          }}
+        />
       </header>
 
-      {/* Backdrop (Click to close) */}
-      <div 
-        className={`fixed inset-0 bg-[#282828]/20 backdrop-blur-sm z-50 transition-opacity duration-500 ${
-          mobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
+      {/* Backdrop */}
+      <div
+        ref={backdropRef}
+        className="fixed inset-0 bg-[#282828]/30 backdrop-blur-sm z-50 opacity-0"
+        style={{ pointerEvents: 'none' }}
         onClick={() => setMobileMenuOpen(false)}
       />
 
       {/* Slide-out Sidebar */}
-      <div 
-        className={`fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-[#F6F6F6] shadow-2xl z-[60] transform transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+      <div
+        ref={sidebarRef}
+        className="fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-[#F6F6F6] shadow-2xl z-[60]"
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between px-8 py-8 border-b border-[#282828]/10">
-          <a 
-            href="/" 
+          <a
+            href="/"
             className="font-semibold tracking-[0.2em] text-[#282828] uppercase text-xl"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
             onClick={() => setMobileMenuOpen(false)}
           >
             Maud Berkx
           </a>
-          <button 
-            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-[#282828]/5 transition-colors duration-300 text-[#282828]"
+          <button
+            className="flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300 text-[#282828] hover:bg-[#282828]/5"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Close menu"
           >
@@ -122,44 +275,40 @@ export default function Header() {
         </div>
 
         {/* Sidebar Navigation */}
-        <div className="flex flex-col px-8 py-12 h-[calc(100vh-180px)] overflow-y-auto">
-          <nav className="space-y-6 flex-1">
+        <div className="flex flex-col px-8 py-12 h-[calc(100vh-180px)]">
+          <nav className="space-y-6 flex-1 flex flex-col">
             {navItems.map((item, index) => (
-              <a 
+              <a
                 key={item}
+                ref={(el) => { navLinksRef.current[index] = el }}
                 href={`/${item.toLowerCase().replace(' ', '-')}`}
-                className="block text-[#282828] hover:text-[#583929] transition-colors duration-300 text-4xl md:text-5xl"
-                style={{ 
-                  fontFamily: 'var(--font-eb-garamond), serif',
-                  opacity: mobileMenuOpen ? 1 : 0,
-                  transform: mobileMenuOpen ? 'translateX(0)' : 'translateX(30px)',
-                  transition: `all 0.5s ease ${index * 0.1 + 0.2}s`
-                }}
+                className="group relative inline-block text-[#282828] text-4xl md:text-5xl transition-[letter-spacing,color] duration-300 hover:text-[#583929] hover:tracking-wide"
+                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {item}
+                <span
+                  className="absolute left-0 -bottom-1 h-px w-full origin-left scale-x-0 transition-transform duration-400 ease-out group-hover:scale-x-100"
+                  style={{ backgroundColor: GOLD }}
+                />
               </a>
             ))}
           </nav>
 
           {/* Sidebar Footer / CTA */}
-          <div 
-            className="pt-8 border-t border-[#282828]/10"
-            style={{ 
-              opacity: mobileMenuOpen ? 1 : 0,
-              transform: mobileMenuOpen ? 'translateY(0)' : 'translateY(20px)',
-              transition: 'all 0.5s ease 0.6s'
-            }}
-          >
-            <button 
-              className="w-full font-medium tracking-[0.2em] text-[#F6F6F6] bg-[#282828] px-8 py-4 rounded-full hover:bg-[#583929] transition-all duration-300 uppercase text-sm"
+          <div ref={sidebarCtaRef} className="pt-8 border-t border-[#282828]/10">
+            <button
+              className="w-full font-medium tracking-[0.2em] text-[#F6F6F6] bg-[#282828] px-8 py-4 rounded-full transition-all duration-300 uppercase text-sm hover:bg-[#583929] hover:tracking-[0.24em]"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
               onClick={() => setMobileMenuOpen(false)}
             >
               Request Invitation
             </button>
-            
-            <p className="text-center text-[#282828]/60 text-xs mt-6" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
+
+            <p
+              className="text-center text-[#282828]/60 text-xs mt-6"
+              style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
+            >
               Helping women build a Kingdom legacy through faith, wisdom and leadership.
             </p>
           </div>
