@@ -32,10 +32,10 @@ export default function Footer() {
   };
 
   const navLinks = [
-    { name: 'Journal', href: '/journal' },
-    { name: 'Podcast', href: '/podcast' },
-    { name: 'Speaking', href: '/speaking' },
     { name: 'About', href: '/about' },
+    { name: 'Journal', href: '/journal' },
+    { name: 'Wisdom', href: '/wisdom' },
+    { name: 'Podcast', href: '/podcast' }
     { name: 'Contact', href: '/contact' }
   ];
 
