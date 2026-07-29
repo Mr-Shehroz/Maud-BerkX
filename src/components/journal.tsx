@@ -53,37 +53,37 @@ export default function JournalSection() {
     {
       title: 'The Quiet Power of Editorial Essays',
       height: 460,
-      img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&h=650&fit=crop',
+      img: 'wisdom-1.png',
     },
     {
       title: 'The Quiet Power of Kingdom Leaders Essays',
       height: 360,
-      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=500&h=560&fit=crop',
+      img: 'about-4.png',
     },
     {
       title: 'The Quiet Power of Kingdom Leadership',
       height: 260,
-      img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=500&h=340&fit=crop',
+      img: 'about-5.png',
     },
     {
       title: 'The Grace Stewards Emerald for Editorial Essays',
       height: 300,
-      img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=500&h=380&fit=crop',
+      img: 'about-3.png',
     },
     {
       title: 'The Quiet Photograph of Editorial Essays',
       height: 400,
-      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&h=520&fit=crop',
+      img: 'about-1.png',
     },
     {
       title: 'The Quiet Power of Kingdom Leadership for Premiums',
       height: 340,
-      img: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&h=440&fit=crop',
+      img: 'wisdom-2.png',
     },
     {
       title: 'The Quiet Power of Kingdom Leadership',
       height: 260,
-      img: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=500&h=340&fit=crop',
+      img: 'wisdom-3.png',
     },
   ];
 

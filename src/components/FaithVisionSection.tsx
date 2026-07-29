@@ -27,7 +27,7 @@ export default function FaithVisionSection() {
       title: 'The Foundation',
       desc: 'A vision of purposeful leadership takes root — the first seeds of a calling that would grow into a life\u2019s work.',
       quote: '“Every legacy begins as a whisper before it becomes a voice.”',
-      img: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=700&h=850&fit=crop',
+      img: '/about-4.png',
     },
     {
       roman: 'II',
@@ -35,7 +35,7 @@ export default function FaithVisionSection() {
       title: 'Deepening Faith',
       desc: 'Wisdom becomes the core. The Kingdom focus emerges as the true north of every decision made from here forward.',
       quote: '“Faith did not change the direction — it became the compass.”',
-      img: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=700&h=850&fit=crop',
+      img: '/about-1.png',
     },
     {
       roman: 'III',
@@ -43,7 +43,7 @@ export default function FaithVisionSection() {
       title: 'Expanding Impact',
       desc: 'The global community finds leadership with grace, carrying the work across continents and cultures.',
       quote: '“Influence, rightly stewarded, has no borders.”',
-      img: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=700&h=850&fit=crop',
+      img: '/about-3.png',
     },
     {
       roman: 'IV',
@@ -51,7 +51,7 @@ export default function FaithVisionSection() {
       title: 'Kingdom Legacy',
       desc: 'Vision and wisdom are codified for future generations — a legacy built to hold weight long after today.',
       quote: '“What is built to last is never built alone.”',
-      img: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=700&h=850&fit=crop',
+      img: '/about-5.png',
     },
   ];
 

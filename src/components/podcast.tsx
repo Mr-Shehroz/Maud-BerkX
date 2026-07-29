@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Clock, Calendar } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,69 +16,85 @@ export default function PodcastSection() {
     const ctx = gsap.context(() => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      gsap.fromTo('.podcast-label', 
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.podcast-label', start: 'top 85%' } }
-      );
-
-      gsap.fromTo('.podcast-heading', 
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.podcast-heading', start: 'top 85%' }, delay: 0.1 }
-      );
-
-      gsap.fromTo('.featured-episode', 
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.featured-episode', start: 'top 80%' }, delay: 0.2 }
-      );
-
-      gsap.utils.toArray<HTMLElement>('.episode-item').forEach((item, i) => {
-        gsap.fromTo(item, 
-          { opacity: 0, x: -20 },
-          { 
-            opacity: 1, 
-            x: 0,
-            duration: 0.7,
-            ease: 'power3.out',
-            scrollTrigger: { 
-              trigger: item, 
-              start: 'top 85%',
-              toggleActions: 'play none none reverse'
-            },
-            delay: i * 0.1
-          }
-        );
+      gsap.from('.podcast-header', { 
+        opacity: 0, 
+        y: 40, 
+        duration: 1, 
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.podcast-header', start: 'top 85%' }
       });
 
+      gsap.from('.featured-episode-card', { 
+        opacity: 0, 
+        x: -40, 
+        duration: 1, 
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.featured-episode-card', start: 'top 85%' }
+      });
+
+      gsap.from('.recent-episodes-header', { 
+        opacity: 0, 
+        y: 20, 
+        duration: 0.8, 
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.recent-episodes-header', start: 'top 90%' }
+      });
+
+      gsap.utils.toArray<HTMLElement>('.episode-item').forEach((item, i) => {
+        gsap.from(item, { 
+          opacity: 0, 
+          x: 30, 
+          duration: 0.7,
+          ease: 'power3.out',
+          delay: i * 0.1,
+          scrollTrigger: { trigger: item, start: 'top 90%' }
+        });
+      });
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
   const featuredEpisode = {
+    number: 'Episode 47',
     title: 'The Quiet Power of Kingdom Leadership',
     description: 'In this profound conversation, we explore what it means to lead with quiet confidence, rooted in faith and wisdom.',
+    duration: '52 min',
+    date: 'Jan 20, 2026',
     image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=800'
   };
 
   const episodes = [
     {
-      title: 'The Quiet Power of Kingdom Leadership',
-      duration: '52 min',
-      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
-    },
-    {
-      title: 'The Quiet Power of Kingdom Leadership',
+      number: '46',
+      title: 'From Ambition to Stewardship',
       duration: '45 min',
+      date: 'Jan 13, 2026',
+      category: 'Leadership',
       image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
     },
     {
-      title: 'The Quiet Power of Kingdom Leadership',
+      number: '45',
+      title: 'Walking in Divine Timing',
       duration: '38 min',
+      date: 'Jan 6, 2026',
+      category: 'Faith & Wisdom',
       image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
     },
     {
-      title: 'The Quiet Power of Kingdom Leadership',
+      number: '44',
+      title: 'Building Legacy Beyond Lifetime',
       duration: '41 min',
+      date: 'Dec 30, 2025',
+      category: 'Kingdom Impact',
+      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
+    },
+    {
+      number: '43',
+      title: 'Grace-Filled Decision Making',
+      duration: '36 min',
+      date: 'Dec 23, 2025',
+      category: 'Wisdom',
       image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
     }
   ];
@@ -90,124 +106,149 @@ export default function PodcastSection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative bg-[#121212] py-20 md:py-28 lg:py-32 overflow-hidden"
+      className="relative bg-[#121212] py-24 md:py-32 lg:py-40 overflow-hidden"
     >
-      <div className="relative z-10 max-w-[1500px] mx-auto px-4 md:px-6">
+      {/* Background glow */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C5A065]/[0.05] rounded-full blur-[120px] pointer-events-none"></div>
+
+      <div className="relative z-10 max-w-[1500px] mx-auto px-4 md:px-8">
         
         {/* Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="podcast-header text-center mb-16 md:mb-20">
+          <p className="text-[#C5A065] text-xs md:text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
+            06 — The Podcast
+          </p>
           <h2 
-            className="podcast-heading text-white text-3xl md:text-4xl lg:text-5xl font-normal mb-3"
+            className="text-white text-3xl md:text-5xl lg:text-6xl font-normal mb-6"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             Voices of Influence
           </h2>
           <p 
-            className="podcast-label text-white/50 text-xs md:text-sm leading-relaxed max-w-md mx-auto"
+            className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
             Faith, wisdom, and leadership conversations for women of influence.
           </p>
         </div>
 
-        {/* Featured Episode */}
-        <div className="featured-episode mb-10 md:mb-12">
-          <div className="group relative bg-[#C5A065]/10 border border-[#C5A065]/30 rounded-sm overflow-hidden">
-            <div className="flex flex-col md:flex-row">
+        {/* Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+          
+          {/* LEFT: Featured Episode */}
+          <div className="lg:col-span-7">
+            <div className="featured-episode-card group relative bg-[#1a1a1a] border border-white/10 rounded-sm overflow-hidden hover:border-[#C5A065]/40 transition-all duration-500">
+              
               {/* Image */}
-              <div className="md:w-[40%] relative h-[300px] md:h-[320px] overflow-hidden">
+              <div className="relative h-[300px] md:h-[400px]">
                 <img 
                   src={featuredEpisode.image}
                   alt={featuredEpisode.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>
                 
-                {/* Play Button */}
+                {/* Badge */}
+                <div className="absolute top-6 left-6">
+                  <span className="px-4 py-2 bg-[#C5A065] text-[#121212] text-xs font-semibold tracking-wider uppercase">
+                    {featuredEpisode.number}
+                  </span>
+                </div>
+                
+                {/* Play Button - Featured */}
                 <button 
                   onClick={() => togglePlay(0)}
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/95 flex items-center justify-center hover:scale-110 transition-transform duration-300 shadow-lg"
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-2xl transition-all duration-500 hover:bg-[#C5A065] hover:scale-110"
                 >
                   {playingEpisode === 0 ? (
-                    <Pause size={28} className="text-[#121212]" />
+                    <Pause size={32} className="text-[#121212] group-hover:text-white transition-colors duration-300" />
                   ) : (
-                    <Play size={28} className="text-[#121212] ml-1" />
+                    <Play size={32} className="text-[#121212] ml-1 group-hover:text-white transition-colors duration-300" />
                   )}
                 </button>
               </div>
 
               {/* Content */}
-              <div className="md:w-[60%] p-6 md:p-8 lg:p-10 flex flex-col justify-center">
-                <p className="text-[#C5A065] text-xs uppercase tracking-[0.2em] mb-3" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
-                  Featured Episode
-                </p>
-                <h3 
-                  className="text-white text-2xl md:text-3xl lg:text-4xl font-normal leading-[1.2] mb-4"
-                  style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-                >
+              <div className="p-6 md:p-8">
+                <h3 className="text-white text-2xl md:text-3xl mb-4" style={{ fontFamily: 'var(--font-eb-garamond), serif' }}>
                   {featuredEpisode.title}
                 </h3>
-                <p 
-                  className="text-white/60 text-sm md:text-base leading-relaxed"
-                  style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                >
+                <p className="text-gray-400 text-sm md:text-base mb-6">
                   {featuredEpisode.description}
                 </p>
+                <div className="flex items-center gap-4 text-gray-500 text-sm">
+                  <span className="flex items-center gap-2">
+                    <Calendar size={16} />
+                    {featuredEpisode.date}
+                  </span>
+                  <span className="flex items-center gap-2">
+                    <Clock size={16} />
+                    {featuredEpisode.duration}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Recent Episodes List */}
-        <div>
-          <p className="text-white/60 text-xs uppercase tracking-[0.2em] mb-6" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
-            Recent Episodes
-          </p>
+          {/* RIGHT: Recent Episodes */}
+          <div className="lg:col-span-5">
+            <p className="recent-episodes-header text-[#C5A065] text-xs uppercase tracking-wider mb-6">
+              Recent Episodes
+            </p>
 
-          <div className="space-y-3 md:space-y-4">
-            {episodes.map((episode, index) => (
-              <div 
-                key={index}
-                className="episode-item group flex items-center gap-4 md:gap-6 bg-[#1a1a1a]/50 border border-white/5 rounded-sm p-4 md:p-5 hover:border-[#C5A065]/30 transition-all duration-300"
-              >
-                {/* Thumbnail */}
-                <div className="w-16 h-16 md:w-20 md:h-20 flex-shrink-0 overflow-hidden rounded-sm">
-                  <img 
-                    src={episode.image}
-                    alt={episode.title}
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-                  />
-                </div>
-
-                {/* Title */}
-                <div className="flex-1 min-w-0">
-                  <h4 
-                    className="text-white text-sm md:text-base font-normal truncate group-hover:text-[#C5A065] transition-colors duration-300"
-                    style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-                  >
-                    {episode.title}
-                  </h4>
-                  <p className="text-white/40 text-xs mt-1" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
-                    {episode.duration}
-                  </p>
-                </div>
-
-                {/* Play Button */}
-                <button 
+            <div className="space-y-4">
+              {episodes.map((episode, index) => (
+                <div 
+                  key={index}
+                  className="episode-item group flex items-center gap-4 bg-[#1a1a1a] border border-white/5 p-4 hover:border-[#C5A065]/30 transition-all duration-300 cursor-pointer"
                   onClick={() => togglePlay(index + 1)}
-                  className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#C5A065]/50 flex items-center justify-center flex-shrink-0 hover:bg-[#C5A065] hover:border-[#C5A065] transition-all duration-300"
                 >
-                  {playingEpisode === index + 1 ? (
-                    <Pause size={16} className="text-[#C5A065] group-hover:text-white" />
-                  ) : (
-                    <Play size={16} className="text-[#C5A065] ml-0.5 group-hover:text-white" />
-                  )}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+                  {/* Thumbnail */}
+                  <div className="w-16 h-16 flex-shrink-0 bg-[#2a2a2a] overflow-hidden rounded-sm">
+                    <img 
+                      src={episode.image}
+                      alt={episode.title}
+                      className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+                    />
+                  </div>
 
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-white text-sm mb-1 truncate group-hover:text-[#C5A065] transition-colors duration-300" style={{ fontFamily: 'var(--font-eb-garamond), serif' }}>
+                      {episode.title}
+                    </h4>
+                    <p className="text-gray-500 text-xs">
+                      {episode.duration} • {episode.date}
+                    </p>
+                  </div>
+
+                  {/* Play Button - Episode List */}
+                  <button className="w-10 h-10 rounded-full border border-[#C5A065]/50 flex items-center justify-center flex-shrink-0 transition-all duration-300 hover:bg-[#C5A065] hover:border-[#C5A065] group/btn">
+                    {playingEpisode === index + 1 ? (
+                      <Pause size={16} className="text-[#C5A065] group-hover/btn:text-white transition-colors duration-300" />
+                    ) : (
+                      <Play size={16} className="text-[#C5A065] ml-0.5 group-hover/btn:text-white transition-colors duration-300" />
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* View All Link */}
+            <div className="mt-8 text-center">
+              <a 
+                href="/podcast"
+                className="inline-flex items-center gap-2 text-[#C5A065] text-sm hover:text-white transition-colors"
+              >
+                <span>View All Episodes</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
       </div>
     </section>
   );

@@ -6,8 +6,9 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const GOLD = '#C5A065';
+const BROWN = '#583929';
 
-export default function AboutSection() {
+export default function StorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const goldLineRef = useRef<HTMLSpanElement>(null);
@@ -21,8 +22,8 @@ export default function AboutSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        gsap.set('.about-img', { opacity: 1, y: 0, scale: 1 });
-        gsap.set('.about-text', { opacity: 1, y: 0 });
+        gsap.set('.story-img', { opacity: 1, y: 0, scale: 1 });
+        gsap.set('.story-text', { opacity: 1, y: 0 });
         gsap.set(eyebrowRef.current, { opacity: 1, y: 0 });
         return;
       }
@@ -36,7 +37,7 @@ export default function AboutSection() {
         defaults: { ease: 'expo.out' },
       });
 
-      tl.from('.about-img', {
+      tl.from('.story-img', {
         opacity: 0,
         y: 40,
         scale: 1.05,
@@ -73,9 +74,8 @@ export default function AboutSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 lg:py-40 bg-[#F6F6F6] overflow-hidden"
+      className="relative py-24 md:py-32 lg:py-40 bg-[#EFEAE1] overflow-hidden"
     >
-      {/* Subtle background texture */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
@@ -85,114 +85,69 @@ export default function AboutSection() {
       />
 
       <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 relative">
+        {/* Mirrored order vs. homepage: text left, collage right — so
+            the two sections read as a pair, not a duplicate. */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
-          {/* Left Side: Artistic Collage */}
-          <div
-            className="lg:col-span-5 grid gap-3 md:gap-4 h-[560px] md:h-[660px] lg:h-[700px]"
-            style={{
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridTemplateRows: 'repeat(4, 1fr)',
-              gridTemplateAreas: `
-                "a b f"
-                "a c f"
-                "d c f"
-                "d e f"
-              `,
-            }}
-          >
-            {[
-              { area: 'a', src: 'about-1.png', alt: 'Portrait' },
-              { area: 'b', src: 'about-3.png', alt: 'Hands' },
-              { area: 'c', src: 'about-4.png', alt: 'Woman in dark' },
-              { area: 'd', src: 'about-2.png', alt: 'Artistic closeup' },
-              { area: 'e', src: 'about-5.png', alt: 'Hand detail' },
-              { area: 'f', src: 'about-6.png', alt: 'Standing portrait' },
-            ].map((img) => (
-              <div
-                key={img.area}
-                className="about-img group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
-                style={{ gridArea: img.area }}
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
-                />
-                {/* Subtle gold-tinted overlay on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"
-                  style={{ background: `linear-gradient(to top, ${GOLD}22, transparent)` }}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Right Side: Content */}
-          <div className="lg:col-span-7 lg:pl-6 xl:pl-10">
-            {/* Eyebrow label */}
+          {/* Left Side: Content */}
+          <div className="lg:col-span-7 lg:pr-6 xl:pr-10 order-2 lg:order-1">
             <span
               ref={eyebrowRef}
               className="block text-xs md:text-sm tracking-[0.25em] uppercase mb-4 md:mb-5"
               style={{ color: GOLD, fontFamily: 'var(--font-hanken), sans-serif' }}
             >
-              Legacy &amp; Leadership
+              02 — Her Story
             </span>
 
-            {/* Heading */}
             <h2
               ref={headingRef}
               className="text-[#282828] text-3xl md:text-5xl lg:text-6xl font-normal mb-4 md:mb-6 leading-[1.1]"
               style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
             >
-              About the Founder
+              Not a straight road —{' '}
+              <span className="italic" style={{ color: BROWN }}>a faithful one.</span>
             </h2>
 
-            {/* Gold Accent Line */}
             <span
               ref={goldLineRef}
               className="block h-px w-12 md:w-16 mb-8 md:mb-10 origin-left"
               style={{ backgroundColor: GOLD, transform: 'scaleX(0)' }}
             />
 
-            {/* Content Paragraphs */}
             <div className="space-y-5 md:space-y-6">
               <p
                 ref={(el) => { paragraphsRef.current[0] = el }}
-                className="about-text text-[#453E33]/70 text-sm md:text-base lg:text-xl leading-relaxed lg:leading-[1.7]"
+                className="story-text text-[#453E33]/70 text-sm md:text-base lg:text-xl leading-relaxed lg:leading-[1.7]"
                 style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
               >
-                <span className="text-[#282828] font-medium">Maud Berky</span> is an international
-                leadership strategist and wisdom keeper who has dedicated her life to helping
-                women of influence build enduring legacies rooted in faith, purpose, and
-                Kingdom principles. Her work bridges the ancient and the modern, offering a
-                voice that is both timeless and urgently needed.
+                <span className="text-[#282828] font-medium">Maud</span> never set out to
+                become a name spoken in rooms of influence. She set out, simply, to be
+                faithful with what she was given — a conviction, a quiet discipline, and a
+                stubborn belief that leadership was never meant to be about visibility.
               </p>
 
               <p
                 ref={(el) => { paragraphsRef.current[1] = el }}
-                className="about-text text-[#453E33]/70 text-sm md:text-base lg:text-xl leading-relaxed lg:leading-[1.7]"
+                className="story-text text-[#453E33]/70 text-sm md:text-base lg:text-xl leading-relaxed lg:leading-[1.7]"
                 style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
               >
-                With over two decades of experience mentoring global leaders, Maud combines
-                deep spiritual insight with practical wisdom to guide women through
-                transformative journeys of leadership and legacy-building. She believes that
-                true influence is not about visibility, but about stewardship.
+                What began as private mentorship in borrowed living rooms slowly became a
+                body of work that now reaches women of influence across continents — though
+                the posture underneath it has never changed. She was, and remains, the
+                person others quietly seek out in the margins of difficult decisions.
               </p>
 
               <p
                 ref={(el) => { paragraphsRef.current[2] = el }}
-                className="about-text text-[#453E33]/70 text-sm md:text-base lg:text-xl leading-relaxed lg:leading-[1.7]"
+                className="story-text text-[#453E33]/70 text-sm md:text-base lg:text-xl leading-relaxed lg:leading-[1.7]"
                 style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
               >
-                Her work spans continents, impacting women across cultures and generations
-                through intimate mentorship, speaking engagements, and her curated wisdom
-                journal. Maud is building something that outlasts trend and circumstance —
-                a life, and a leadership, built to hold weight.
+                Today, that same conviction shapes mentorship circles, speaking engagements,
+                and a growing body of writing — all pointed at one quiet belief: that a life
+                well-stewarded becomes a legacy that holds weight long after the room empties.
               </p>
             </div>
 
-            {/* Signature-style closing accent */}
             <div className="mt-8 md:mt-10 flex items-center gap-4">
               <span className="h-px flex-1 max-w-[60px]" style={{ backgroundColor: `${GOLD}66` }} />
               <span
@@ -202,6 +157,47 @@ export default function AboutSection() {
                 Founder, Kingdom Legacy Collective
               </span>
             </div>
+          </div>
+
+          {/* Right Side: Artistic Collage — same grid structure as
+              homepage About section, different crop selection */}
+          <div
+            className="lg:col-span-5 grid gap-3 md:gap-4 h-[560px] md:h-[660px] lg:h-[700px] order-1 lg:order-2"
+            style={{
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gridTemplateRows: 'repeat(4, 1fr)',
+              gridTemplateAreas: `
+                "f a b"
+                "f a c"
+                "f d c"
+                "f d e"
+              `,
+            }}
+          >
+            {[
+              { area: 'a', src: 'about-4.png', alt: 'Portrait' },
+              { area: 'b', src: 'about-5.png', alt: 'Detail' },
+              { area: 'c', src: 'about-2.png', alt: 'Woman in dark' },
+              { area: 'd', src: 'about-3.png', alt: 'Artistic closeup' },
+              { area: 'e', src: 'about-6.png', alt: 'Hand detail' },
+              { area: 'f', src: 'about-1.png', alt: 'Standing portrait' },
+            ].map((img) => (
+              <div
+                key={img.area}
+                className="story-img group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+                style={{ gridArea: img.area }}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
+                />
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"
+                  style={{ background: `linear-gradient(to top, ${GOLD}22, transparent)` }}
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>

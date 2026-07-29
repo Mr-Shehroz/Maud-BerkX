@@ -19,7 +19,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = ['Journal', 'Podcast', 'Speaking', 'Wisdom', 'Inquiry'];
+  const navItems = ['About', 'Journal', 'Wisdom', 'Podcast'];
 
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
@@ -170,7 +170,7 @@ export default function Header() {
                 className="font-serif font-medium tracking-[0.15em] text-white uppercase text-xl md:text-2xl lg:text-3xl transition-colors duration-300 group-hover:text-[#C5A065]"
                 style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
               >
-                Maud Berky
+                Maud Berkx
               </span>
             </a>
 
