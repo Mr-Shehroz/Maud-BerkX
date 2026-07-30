@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Menu, X } from 'lucide-react';
+import { usePathname } from 'next/navigation';
 
 // Updated Gold color to match the reference image's metallic gold accent
 const GOLD = '#C5A065'; 
@@ -18,12 +19,19 @@ export default function Header() {
 
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const navItems = ['About', 'Journal', 'Podcast','Contact'];
 
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Helper to check if link is active
+  const isActive = (itemName: string) => {
+    const itemPath = `/${itemName.toLowerCase().replace(' ', '-')}`;
+    return pathname === itemPath;
+  };
 
   // ---------- Entrance sequence ----------
   useEffect(() => {
@@ -176,23 +184,17 @@ export default function Header() {
 
             {/* Right: CTA Group (Request Button + Menu Toggle) */}
             <div className="header-cta-group flex items-center gap-4 md:gap-6">
-              {/* Request Invitation Button - Desktop Only */}
-              {/* <button
-                ref={requestBtnRef}
-                className="hidden md:block relative font-serif font-medium text-[#C5A065] bg-transparent border border-[#C5A065] px-6 md:px-8 py-2.5 rounded-none transition-all duration-300 whitespace-nowrap lg:text-base text-sm hover:bg-[#C5A065] hover:text-[#121212]"
-                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-              >
-                Request Invitation
-              </button> */}
-
               {/* Menu Toggle Button */}
               <button
-                className="header-menu flex items-center text-white hover:text-[#C5A065] transition-colors duration-300"
+                className="group header-menu flex items-center text-white hover:text-[#C5A065] transition-colors duration-300"
                 onClick={() => setMobileMenuOpen(true)}
                 aria-label="Open menu"
               >
-                <span ref={menuIconRef} className="inline-flex">
-                  <Menu size={24} strokeWidth={1.5} />
+                <span ref={menuIconRef} className="inline-flex relative w-6 h-6 items-center justify-center">
+                  {/* Shows by default, hides on hover */}
+                  <Menu className="absolute inset-0 block group-hover:hidden transition-opacity duration-300" size={24} strokeWidth={1.5} />
+                  {/* Hidden by default, shows on hover */}
+                  <X className="absolute inset-0 hidden group-hover:block transition-opacity duration-300" size={24} strokeWidth={1.5} />
                 </span>
               </button>
             </div>
@@ -223,34 +225,45 @@ export default function Header() {
           >
             Maud Berky
           </a>
+          
+          {/* Close Button: Shows X by default, Menu on hover */}
           <button
-            className="flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300 text-white hover:bg-white/5"
+            className="group flex items-center justify-center w-10 h-10 rounded-full transition-colors duration-300 text-white hover:bg-white/5"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Close menu"
           >
-            <X size={24} strokeWidth={1.5} />
+            <span className="relative w-6 h-6 flex items-center justify-center">
+              <X className="absolute inset-0 block group-hover:hidden transition-opacity duration-300" size={24} strokeWidth={1.5} />
+              <Menu className="absolute inset-0 hidden group-hover:block transition-opacity duration-300" size={24} strokeWidth={1.5} />
+            </span>
           </button>
         </div>
 
         {/* Sidebar Navigation */}
         <div className="flex flex-col px-8 py-12 h-[calc(100vh-180px)]">
           <nav className="space-y-8 flex-1 flex flex-col">
-            {navItems.map((item, index) => (
-              <a
-                key={item}
-                ref={(el) => { navLinksRef.current[index] = el }}
-                href={`/${item.toLowerCase().replace(' ', '-')}`}
-                className="group relative inline-block text-white text-3xl md:text-4xl transition-colors duration-300 hover:text-[#C5A065]"
-                style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {item}
-                <span
-                  className="absolute left-0 -bottom-1 h-px w-0 transition-all duration-400 ease-out group-hover:w-full"
-                  style={{ backgroundColor: GOLD }}
-                />
-              </a>
-            ))}
+            {navItems.map((item, index) => {
+              const active = isActive(item);
+              return (
+                <a
+                  key={item}
+                  ref={(el) => { navLinksRef.current[index] = el }}
+                  href={`/${item.toLowerCase().replace(' ', '-')}`}
+                  className={`group relative inline-block text-3xl md:text-4xl transition-all duration-300 ${
+                    active ? 'text-[#C5A065]' : 'text-white hover:text-[#C5A065]'
+                  }`}
+                  style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {item}
+                  <span
+                    className={`absolute left-0 -bottom-1 h-px transition-all duration-400 ease-out ${
+                      active ? 'w-full bg-[#C5A065]' : 'w-0 bg-[#C5A065] group-hover:w-full'
+                    }`}
+                  />
+                </a>
+              );
+            })}
           </nav>
 
           {/* Sidebar Footer / CTA */}

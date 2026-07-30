@@ -73,7 +73,7 @@ export default function AboutSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 lg:py-40 bg-[#F6F6F6] overflow-hidden"
+      className="relative py-[50px] md:py-[80px] lg:py-[100px] bg-[#F6F6F6] overflow-hidden"
     >
       {/* Subtle background texture */}
       <div

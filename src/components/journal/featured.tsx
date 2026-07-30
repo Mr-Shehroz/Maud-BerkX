@@ -151,7 +151,7 @@ export default function FeaturedArticle() {
   };
 
   return (
-    <section ref={sectionRef} data-section-label="Editor's Pick" className="relative bg-[#F6F6F6] py-24 md:py-32 lg:py-40 overflow-hidden">
+    <section ref={sectionRef} data-section-label="Editor's Pick" className="relative bg-[#F6F6F6] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden">
 
       {/* Subtle texture — same safe device used on Journal Hero/Credentials */}
       <div
@@ -166,7 +166,7 @@ export default function FeaturedArticle() {
           className="fa-label text-[#475D66] text-xs md:text-sm tracking-[0.25em] uppercase mb-16 md:mb-20"
           style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
         >
-          02 — Editor&rsquo;s Pick
+          — Editor&rsquo;s Pick
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-20 items-center">
@@ -216,15 +216,6 @@ export default function FeaturedArticle() {
           {/* Content */}
           <div className="fa-content relative order-1 lg:order-2 lg:pl-4">
 
-            {/* Contained ghost numeral — fills the dead space below the
-                CTA without risking overlap; clipped to this column only. */}
-            <span
-              className="fa-ghost-num pointer-events-none select-none absolute -bottom-6 right-0 text-[9rem] leading-none opacity-0"
-              style={{ fontFamily: 'var(--font-eb-garamond), serif', color: GOLD, opacity: 0.08 }}
-              aria-hidden
-            >
-              02
-            </span>
 
             {/* Category — bordered pill instead of plain tag text */}
             <div

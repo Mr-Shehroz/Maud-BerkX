@@ -74,7 +74,7 @@ export default function StorySection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-24 md:py-32 lg:py-40 bg-[#EFEAE1] overflow-hidden"
+      className="relative py-[50px] md:py-[80px] lg:py-[100px] bg-[#EFEAE1] overflow-hidden"
     >
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -96,7 +96,7 @@ export default function StorySection() {
               className="block text-xs md:text-sm tracking-[0.25em] uppercase mb-4 md:mb-5"
               style={{ color: GOLD, fontFamily: 'var(--font-hanken), sans-serif' }}
             >
-              02 — Her Story
+              — Her Story
             </span>
 
             <h2

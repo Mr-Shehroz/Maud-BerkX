@@ -49,7 +49,7 @@ export default function PodcastSubscribe() {
   };
 
   return (
-    <section className="relative bg-[#121212] py-24 md:py-32">
+    <section className="relative bg-[#121212] py-[50px] md:py-[80px] lg:py-[100px]">
       <div className="w-full max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
         <div
           ref={ref}

@@ -77,7 +77,7 @@ export default function JournalHero() {
             className="jh-label text-[#DDD9CE]/60 text-xs md:text-sm tracking-[0.3em] uppercase mb-6 md:mb-8"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
-            01 — The Journal
+            The Journal
           </p>
 
           <h1

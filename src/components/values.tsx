@@ -79,7 +79,7 @@ export default function CoreValuesSection() {
     },
     {
       title: 'Professional Excellence',
-      description: 'A relentless dedication to mastery, precision, and uncompromising quality in every facet of our work.',
+      description: 'A relentless dedication to mastery, precision, and uncompromising quality in every facet of our work and execution.',
     },
   ];
 
@@ -87,7 +87,7 @@ export default function CoreValuesSection() {
     <section
       ref={sectionRef}
       data-section-label="Core Values"
-      className="relative bg-[#121212] py-24 md:py-32 lg:py-40 overflow-hidden"
+      className="relative bg-[#121212] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden"
     >
       {/* Ambient background glow */}
       <div
@@ -105,7 +105,7 @@ export default function CoreValuesSection() {
               className="values-label text-[#C5A065] text-xs md:text-sm tracking-[0.3em] uppercase mb-6"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
             >
-              03 — Core Values
+              Core Values
             </p>
             <h2
               className="text-white text-4xl md:text-5xl lg:text-6xl font-normal leading-[1.15]"
@@ -128,7 +128,7 @@ export default function CoreValuesSection() {
           </div>
 
           {/* Navigation Arrows - Aligned with heading */}
-          <div className="absolute top-0 right-0 md:top-4 lg:top-[23vh] flex items-center gap-3">
+          {/* <div className="absolute top-0 right-0 md:top-4 lg:top-[23vh] flex items-center gap-3">
             <button 
               ref={prevRef}
               className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:bg-[#C5A065] hover:border-[#C5A065] hover:text-[#121212] transition-all duration-500 group"
@@ -147,7 +147,7 @@ export default function CoreValuesSection() {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Premium Carousel */}
@@ -168,12 +168,12 @@ export default function CoreValuesSection() {
               clickable: true,
               el: '.values-swiper-pagination',
             }}
-            className="values-swiper !pb-20"
+            className="values-swiper !pb-16 flex"
           >
             {values.map((value, i) => (
               <SwiperSlide key={value.title}>
                 <div className="h-full">
-                  <div className="value-card group relative h-full bg-[#1a1a1a] border border-white/5 rounded-sm p-8 md:p-10 transition-all duration-500 hover:border-[#C5A065]/40 hover:shadow-[0_20px_60px_-15px_rgba(197,160,101,0.15)]">
+                  <div className="value-card group relative h-full bg-[#1a1a1a] border border-white/5 rounded-sm p-8 md:p-10 transition-all duration-500 hover:border-[#C5A065]/40 hover:shadow-[0_20px_60px_-15px_rgba(197,160,101,0.15)] hover:cursor-grab">
                     
                     {/* Animated top gold line on hover */}
                     <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#C5A065] to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
@@ -215,7 +215,7 @@ export default function CoreValuesSection() {
           </Swiper>
 
           {/* Pagination Dots - Centered Below */}
-          <div className="values-swiper-pagination flex justify-center gap-3 mt-8"></div>
+          <div className="values-swiper-pagination flex justify-center gap-3"></div>
         </div>
 
         {/* Signature and CTA */}

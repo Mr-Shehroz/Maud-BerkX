@@ -31,124 +31,194 @@ const CATEGORIES = [
   },
 ];
 
-function useRevealOnScroll<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [visible, setVisible] = useState(false);
+export default function Categories() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const reveal = () => setVisible(true);
-    const fallback = setTimeout(reveal, 1200);
-
-    if (typeof IntersectionObserver === 'undefined') {
-      reveal();
-      return () => clearTimeout(fallback);
-    }
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting) {
-          reveal();
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
           observer.disconnect();
         }
       },
       { threshold: 0.15 }
     );
-    observer.observe(node);
-    return () => {
-      clearTimeout(fallback);
-      observer.disconnect();
-    };
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
   }, []);
 
-  return { ref, visible };
-}
-
-export default function Categories() {
-  const { ref, visible } = useRevealOnScroll<HTMLDivElement>();
-
   return (
-    <section className="relative py-24 md:py-32 lg:py-40 overflow-hidden" style={{ backgroundColor: BG }}>
+    <section 
+      ref={sectionRef} 
+      className="relative py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden" 
+      style={{ backgroundColor: BG }}
+    >
+      {/* Subtle ambient background glow */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] pointer-events-none opacity-40"
         style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, ${BODY} 1px, transparent 0)`,
-          backgroundSize: '32px 32px',
+          background: `radial-gradient(ellipse at center, rgba(197, 160, 101, 0.08), transparent 70%)`,
         }}
       />
 
-      <div className="w-full max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 relative">
+      <div className="w-full max-w-[1500px] mx-auto px-6 md:px-10 relative z-10">
 
-        <div className="flex items-center gap-4 mb-6">
-          <span className="block h-px w-10" style={{ backgroundColor: GOLD }} />
-          <p className="text-xs md:text-sm tracking-[0.25em] uppercase" style={{ color: GOLD, fontFamily: SANS }}>
-            Topics
-          </p>
-        </div>
-
-        <h2
-          className="text-3xl sm:text-4xl md:text-5xl font-normal leading-[1.2] mb-14 md:mb-20 max-w-2xl"
-          style={{ fontFamily: SERIF, color: INK }}
-        >
-          Four threads, one conversation.
-        </h2>
-
-        <div
-          ref={ref}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px transition-all duration-700 ease-out"
-          style={{
-            backgroundColor: `${BODY}1A`,
-            opacity: visible ? 1 : 0,
-            transform: visible ? 'translateY(0)' : 'translateY(20px)',
-            boxShadow: '0 8px 30px rgba(0,0,0,0.06)',
+        {/* Header */}
+        <div 
+          className="mb-10 md:mb-14"
+          style={{ 
+            opacity: isVisible ? 1 : 0, 
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transition: 'opacity 1s ease-out, transform 1s ease-out'
           }}
         >
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat.title}
-              className="group text-left p-8 md:p-10 transition-colors duration-300"
-              style={{ backgroundColor: BG }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#EFEFEF')}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = BG)}
-            >
-              <span
-                className="block text-xs tracking-[0.15em] uppercase mb-6"
-                style={{ color: `${BODY}80`, fontFamily: SANS }}
-              >
-                {cat.count}
-              </span>
+          <div className="flex items-center gap-3 mb-6">
+            <span className="block h-px w-8" style={{ backgroundColor: GOLD }} />
+            <p className="text-[10px] md:text-[11px] tracking-[0.35em] uppercase font-medium" style={{ color: GOLD, fontFamily: SANS }}>
+              Topics
+            </p>
+          </div>
 
-              <h3
-                className="text-2xl mb-4 font-normal transition-colors duration-300 group-hover:text-[color:var(--gold)]"
-                style={{ fontFamily: SERIF, color: INK, ['--gold' as string]: GOLD }}
-              >
-                {cat.title}
-              </h3>
+          <h2
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-normal leading-[1.15] max-w-2xl"
+            style={{ fontFamily: SERIF, color: INK }}
+          >
+            Four threads, <br className="hidden md:block" />
+            <span className="italic" style={{ color: GOLD }}>one conversation.</span>
+          </h2>
+        </div>
 
-              <p className="text-sm leading-relaxed mb-8" style={{ color: `${BODY}B3`, fontFamily: SANS }}>
-                {cat.description}
-              </p>
-
-              <span
-                className="inline-flex items-center gap-2 text-xs tracking-[0.1em] uppercase"
-                style={{ color: GOLD, fontFamily: SANS }}
-              >
-                Browse
-                <svg
-                  width="12"
-                  height="10"
-                  viewBox="0 0 12 10"
-                  fill="none"
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                >
-                  <path d="M7 0L12 5L7 10" stroke={GOLD} strokeWidth="1.2" />
-                  <path d="M0 5H11.5" stroke={GOLD} strokeWidth="1.2" />
-                </svg>
-              </span>
-            </button>
+        {/* Editorial List */}
+        <div className="flex flex-col">
+          {CATEGORIES.map((cat, i) => (
+            <CategoryRow 
+              key={cat.title} 
+              category={cat} 
+              index={i + 1} 
+              isVisible={isVisible} 
+              delay={i * 120} 
+            />
           ))}
         </div>
       </div>
     </section>
+  );
+}
+
+function CategoryRow({ category, index, isVisible, delay }: { 
+  category: typeof CATEGORIES[0]; 
+  index: number; 
+  isVisible: boolean; 
+  delay: number; 
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className="group relative cursor-pointer border-b border-[#453E33]/10"
+      style={{
+        backgroundColor: isHovered ? 'rgba(255, 255, 255, 0.6)' : 'transparent',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+        transition: `opacity 0.8s ease-out ${delay}ms, transform 0.8s ease-out ${delay}ms, background-color 0.5s ease-out`,
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Gold accent line on left edge */}
+      <div 
+        className="absolute left-0 top-0 bottom-0 w-[2px] origin-top"
+        style={{ 
+          backgroundColor: GOLD,
+          transform: isHovered ? 'scaleY(1)' : 'scaleY(0)',
+          transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+        }}
+      />
+
+      {/* 12-Column Grid Layout */}
+      <div className="grid grid-cols-12 gap-y-4 md:gap-y-0 gap-x-4 md:gap-x-8 items-center py-8 md:py-10 px-4 md:px-6">
+        
+        {/* Number */}
+        <div className="col-span-2 md:col-span-1 flex items-center">
+          <span 
+            className="text-xs md:text-sm tracking-[0.2em]"
+            style={{ 
+              color: isHovered ? GOLD : `${BODY}40`, 
+              fontFamily: SANS,
+              transition: 'color 0.4s ease-out'
+            }}
+          >
+            {String(index).padStart(2, '0')}
+          </span>
+        </div>
+
+        {/* Title */}
+        <div className="col-span-10 md:col-span-3">
+          <h3 
+            className="text-2xl md:text-3xl lg:text-4xl font-normal"
+            style={{ 
+              fontFamily: SERIF, 
+              color: isHovered ? GOLD : INK,
+              transition: 'color 0.4s ease-out'
+            }}
+          >
+            {category.title}
+          </h3>
+        </div>
+
+        {/* Description */}
+        <div className="col-span-12 md:col-span-6 md:pl-4">
+          <p 
+            className="text-sm md:text-[0.95rem] leading-relaxed"
+            style={{ 
+              color: isHovered ? BODY : `${BODY}80`, 
+              fontFamily: SANS,
+              transition: 'color 0.4s ease-out'
+            }}
+          >
+            {category.description}
+          </p>
+        </div>
+
+        {/* Meta & Arrow */}
+        <div className="col-span-12 md:col-span-2 flex md:justify-end items-center gap-4 md:gap-6">
+          <span 
+            className="text-[10px] tracking-[0.2em] uppercase"
+            style={{ 
+              color: isHovered ? GOLD : `${BODY}50`, 
+              fontFamily: SANS,
+              transition: 'color 0.4s ease-out'
+            }}
+          >
+            {category.count}
+          </span>
+          
+          <div 
+            className="w-9 h-9 rounded-full border flex items-center justify-center"
+            style={{ 
+              borderColor: isHovered ? GOLD : `${BODY}15`,
+              backgroundColor: isHovered ? GOLD : 'transparent',
+              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              style={{ 
+                stroke: isHovered ? '#FFFFFF' : `${BODY}40`,
+                transform: isHovered ? 'translate(2px, -2px)' : 'translate(0, 0)',
+                transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            >
+              <path d="M7 17L17 7M17 7H7M17 7V17" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

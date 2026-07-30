@@ -84,7 +84,7 @@ export default function TestimonialsSection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative bg-[#F6F6F6] py-28 md:py-36 lg:py-44 overflow-hidden"
+      className="relative bg-[#F6F6F6] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden"
     >
       {/* Subtle decorative elements */}
       <div className="absolute top-20 left-10 w-32 h-32 border border-[#C5A065]/10 rounded-full pointer-events-none"></div>
@@ -100,7 +100,7 @@ export default function TestimonialsSection() {
               className="test-label text-[#C5A065] text-xs md:text-sm tracking-[0.35em] uppercase mb-4"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
             >
-              05 — Testimonials
+              Testimonials
             </p>
             <h2 
               className="test-heading text-[#282828] text-4xl md:text-5xl lg:text-6xl font-normal mb-6"
@@ -117,7 +117,7 @@ export default function TestimonialsSection() {
           </div>
 
           {/* Navigation Arrows - Top Right */}
-          <div className="absolute top-[13vh] right-0 flex items-center gap-3">
+          {/* <div className="absolute top-[13vh] right-0 flex items-center gap-3">
             <button 
               ref={prevRef}
               className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-[#282828]/20 flex items-center justify-center text-gray-600 hover:bg-[#C5A065] hover:border-[#C5A065] hover:text-white transition-all duration-500 group"
@@ -136,7 +136,7 @@ export default function TestimonialsSection() {
                 <path d="M5 12h14M12 5l7 7-7 7"/>
               </svg>
             </button>
-          </div>
+          </div> */}
         </div>
 
         {/* Swiper Carousel */}
@@ -164,7 +164,7 @@ export default function TestimonialsSection() {
                 swiper.params.navigation.nextEl = nextRef.current;
               }
             }}
-            className="test-swiper !pb-20"
+            className="test-swiper !pb-16"
           >
             {testimonials.map((item, index) => (
               <SwiperSlide key={index}>
@@ -220,7 +220,7 @@ export default function TestimonialsSection() {
           </Swiper>
 
           {/* Pagination Dots - Centered Below */}
-          <div className="swiper-pagination-custom flex justify-center gap-3 mt-8"></div>
+          <div className="swiper-pagination-custom flex justify-center gap-3"></div>
         </div>
 
       </div>

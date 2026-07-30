@@ -71,17 +71,9 @@ export default function AboutHero() {
       <div className="relative z-10 w-full max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 pb-20 pt-[50vh]">
         <div className="max-w-4xl ml-auto">
 
-          {/* Label */}
-          <p
-            className="about-hero-label text-[#C5A065] text-xs md:text-sm tracking-[0.3em] uppercase mb-6"
-            style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-          >
-            01 — Her Story
-          </p>
-
           {/* Headline — masked reveal */}
           <h1
-            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.15] mb-6 md:mb-8"
+            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.35] mb-6 md:mb-8"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">

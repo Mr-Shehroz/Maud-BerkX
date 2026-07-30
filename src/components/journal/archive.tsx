@@ -106,7 +106,7 @@ export default function JournalArchive() {
   };
 
   return (
-    <section ref={sectionRef} data-section-label="The Archive" className="relative bg-[#282828] py-24 md:py-32 lg:py-40 overflow-hidden">
+    <section ref={sectionRef} data-section-label="The Archive" className="relative bg-[#282828] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden">
 
       {/* Subtle texture, same safe device used across the site */}
       <div
@@ -122,7 +122,7 @@ export default function JournalArchive() {
             className="ja-label text-[#DDD9CE]/60 text-xs md:text-sm tracking-[0.25em] uppercase mb-6"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
-            03 — The Archive
+            — The Archive
           </p>
           <h2
             className="ja-heading text-[#F6F6F6] text-4xl md:text-5xl lg:text-6xl font-normal leading-[1.15]"

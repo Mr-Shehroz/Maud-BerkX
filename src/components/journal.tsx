@@ -82,7 +82,7 @@ export default function JournalSection() {
     },
     {
       title: 'The Quiet Power of Kingdom Leadership',
-      height: 260,
+      height: 300,
       img: 'wisdom-3.png',
     },
   ];
@@ -90,7 +90,7 @@ export default function JournalSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#282828] py-24 md:py-32 lg:py-40 overflow-hidden"
+      className="relative bg-[#282828] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden"
     >
       {/* Same ambient gold glow used behind Core Values, for continuity
           between the two dark sections. */}
@@ -103,12 +103,12 @@ export default function JournalSection() {
 
       <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
 
-        <div className="text-center mb-16 md:mb-20">
+        <div className="text-center mb-16 md:mb-14">
           <p
             className="journal-label text-[#DDD9CE]/60 text-xs md:text-sm tracking-[0.25em] uppercase mb-5"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
-            06 — Journal &amp; Essays
+            Journal &amp; Essays
           </p>
           <h2
             className="journal-heading text-[#F6F6F6] text-4xl md:text-5xl lg:text-6xl font-normal"
@@ -133,7 +133,7 @@ export default function JournalSection() {
                 <img
                   src={article.img}
                   alt={article.title}
-                  className="w-full h-full object-cover grayscale transition-transform duration-700 ease-out group-hover:scale-105"
+                  className="w-full h-full object-cover object-[center_5%] grayscale transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"

@@ -232,13 +232,13 @@ export default function FaithVisionSection() {
 
   return (
     <section ref={sectionRef} data-section-label="Faith & Vision" className="relative bg-[#F6F6F6] overflow-hidden">
-      <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 py-24 md:py-32 lg:py-40">
+      <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 py-[50px] md:py-[80px] lg:py-[100px]">
 
         <p
           className="fv-label text-center text-[#453E33]/55 text-xs md:text-sm tracking-[0.28em] uppercase mb-5"
           style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
         >
-          04 — Faith &amp; Vision
+          Faith &amp; Vision
         </p>
 
         <div className="fv-heading text-center mb-8">
@@ -253,7 +253,7 @@ export default function FaithVisionSection() {
         </div>
 
         <p
-          className="text-center text-[#453E33]/70 text-sm md:text-base max-w-lg mx-auto mb-24 md:mb-32"
+          className="text-center text-[#453E33]/70 text-sm md:text-base max-w-lg mx-auto mb-24 md:mb-20"
           style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
         >
           Fourteen years of quiet conviction, told the way it was lived — not as a chart of
@@ -292,11 +292,11 @@ export default function FaithVisionSection() {
 
                   {/* Photograph */}
                   <div className="relative md:[direction:ltr]">
-                    <div className="chapter-image-wrap relative h-[320px] md:h-[420px] overflow-hidden rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.12)]">
+                    <div className="chapter-image-wrap relative h-[320px] md:h-[600px] overflow-hidden rounded-sm shadow-[0_20px_50px_rgba(0,0,0,0.12)]">
                       <img
                         src={c.img}
                         alt={c.title}
-                        className="w-full h-full object-cover grayscale"
+                        className="w-full h-full object-cover object-[center_12%] grayscale"
                       />
                     </div>
                     <span

@@ -16,34 +16,34 @@ export default function PodcastSection() {
     const ctx = gsap.context(() => {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-      gsap.from('.podcast-header', { 
-        opacity: 0, 
-        y: 40, 
-        duration: 1, 
+      gsap.from('.podcast-header', {
+        opacity: 0,
+        y: 40,
+        duration: 1,
         ease: 'power3.out',
         scrollTrigger: { trigger: '.podcast-header', start: 'top 85%' }
       });
 
-      gsap.from('.featured-episode-card', { 
-        opacity: 0, 
-        x: -40, 
-        duration: 1, 
+      gsap.from('.featured-episode-card', {
+        opacity: 0,
+        x: -40,
+        duration: 1,
         ease: 'power3.out',
         scrollTrigger: { trigger: '.featured-episode-card', start: 'top 85%' }
       });
 
-      gsap.from('.recent-episodes-header', { 
-        opacity: 0, 
-        y: 20, 
-        duration: 0.8, 
+      gsap.from('.recent-episodes-header', {
+        opacity: 0,
+        y: 20,
+        duration: 0.8,
         ease: 'power3.out',
         scrollTrigger: { trigger: '.recent-episodes-header', start: 'top 90%' }
       });
 
       gsap.utils.toArray<HTMLElement>('.episode-item').forEach((item, i) => {
-        gsap.from(item, { 
-          opacity: 0, 
-          x: 30, 
+        gsap.from(item, {
+          opacity: 0,
+          x: 30,
           duration: 0.7,
           ease: 'power3.out',
           delay: i * 0.1,
@@ -96,6 +96,14 @@ export default function PodcastSection() {
       date: 'Dec 23, 2025',
       category: 'Wisdom',
       image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
+    },
+    {
+      number: '42',
+      title: 'The Quiet Power of Surrender',
+      duration: '42 min',
+      date: 'Dec 16, 2025',
+      category: 'Faith & Wisdom',
+      image: 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&q=80&w=200'
     }
   ];
 
@@ -104,27 +112,27 @@ export default function PodcastSection() {
   };
 
   return (
-    <section 
+    <section
       ref={sectionRef}
-      className="relative bg-[#121212] py-24 md:py-32 lg:py-40 overflow-hidden"
+      className="relative bg-[#121212] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden"
     >
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#C5A065]/[0.05] rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="relative z-10 max-w-[1500px] mx-auto px-4 md:px-8">
-        
+
         {/* Header */}
         <div className="podcast-header text-center mb-16 md:mb-20">
           <p className="text-[#C5A065] text-xs md:text-sm tracking-[0.3em] uppercase mb-4" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
-            06 — The Podcast
+            The Podcast
           </p>
-          <h2 
+          <h2
             className="text-white text-3xl md:text-5xl lg:text-6xl font-normal mb-6"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             Voices of Influence
           </h2>
-          <p 
+          <p
             className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
@@ -134,29 +142,29 @@ export default function PodcastSection() {
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-          
+
           {/* LEFT: Featured Episode */}
           <div className="lg:col-span-7">
             <div className="featured-episode-card group relative bg-[#1a1a1a] border border-white/10 rounded-sm overflow-hidden hover:border-[#C5A065]/40 transition-all duration-500">
-              
+
               {/* Image */}
               <div className="relative h-[300px] md:h-[400px]">
-                <img 
+                <img
                   src={featuredEpisode.image}
                   alt={featuredEpisode.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] to-transparent"></div>
-                
+
                 {/* Badge */}
                 <div className="absolute top-6 left-6">
                   <span className="px-4 py-2 bg-[#C5A065] text-[#121212] text-xs font-semibold tracking-wider uppercase">
                     {featuredEpisode.number}
                   </span>
                 </div>
-                
+
                 {/* Play Button - Featured */}
-                <button 
+                <button
                   onClick={() => togglePlay(0)}
                   className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-2xl transition-all duration-500 hover:bg-[#C5A065] hover:scale-110"
                 >
@@ -192,20 +200,32 @@ export default function PodcastSection() {
 
           {/* RIGHT: Recent Episodes */}
           <div className="lg:col-span-5">
-            <p className="recent-episodes-header text-[#C5A065] text-xs uppercase tracking-wider mb-6">
-              Recent Episodes
-            </p>
+            {/* Header with View All Link */}
+            <div className="recent-episodes-header flex items-center justify-between mb-6">
+              <p className="text-[#C5A065] text-xs uppercase tracking-wider">
+                Recent Episodes
+              </p>
+              <a
+                href="/podcast"
+                className="inline-flex items-center gap-2 text-[#C5A065] text-xs hover:text-white transition-colors"
+              >
+                <span>View All Episodes</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              </a>
+            </div>
 
             <div className="space-y-4">
               {episodes.map((episode, index) => (
-                <div 
+                <div
                   key={index}
                   className="episode-item group flex items-center gap-4 bg-[#1a1a1a] border border-white/5 p-4 hover:border-[#C5A065]/30 transition-all duration-300 cursor-pointer"
                   onClick={() => togglePlay(index + 1)}
                 >
                   {/* Thumbnail */}
                   <div className="w-16 h-16 flex-shrink-0 bg-[#2a2a2a] overflow-hidden rounded-sm">
-                    <img 
+                    <img
                       src={episode.image}
                       alt={episode.title}
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
@@ -232,19 +252,6 @@ export default function PodcastSection() {
                   </button>
                 </div>
               ))}
-            </div>
-
-            {/* View All Link */}
-            <div className="mt-8 text-center">
-              <a 
-                href="/podcast"
-                className="inline-flex items-center gap-2 text-[#C5A065] text-sm hover:text-white transition-colors"
-              >
-                <span>View All Episodes</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-              </a>
             </div>
           </div>
 

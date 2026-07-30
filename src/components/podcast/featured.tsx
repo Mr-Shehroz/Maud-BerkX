@@ -54,7 +54,7 @@ export default function FeaturedEpisode() {
   }, [infoVisible]);
 
   return (
-    <section className="relative py-24 md:py-32 lg:py-40 overflow-hidden" style={{ backgroundColor: BG }}>
+    <section className="relative py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden" style={{ backgroundColor: BG }}>
       {/* Same subtle dot texture used on the About page's light section */}
       <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"

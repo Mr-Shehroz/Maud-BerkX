@@ -25,7 +25,7 @@ export default function MissionApproachSection() {
     {
       num: '02',
       title: 'Discern Together',
-      desc: 'Wisdom is drawn out, not handed down. Maud walks alongside leaders as they name what they already sense but haven\u2019t yet said aloud.',
+      desc: "Wisdom is drawn out, not handed down. Maud walks alongside leaders as they name what they already sense but haven't yet said aloud.",
     },
     {
       num: '03',
@@ -35,7 +35,7 @@ export default function MissionApproachSection() {
     {
       num: '04',
       title: 'Steward the Legacy',
-      desc: 'The work doesn\u2019t end at implementation. Ongoing stewardship ensures what\u2019s built continues to serve long after the engagement closes.',
+      desc: "The work doesn't end at implementation. Ongoing stewardship ensures what's built continues to serve long after the engagement closes.",
     },
   ];
 
@@ -138,26 +138,26 @@ export default function MissionApproachSection() {
   }, [prefersReducedMotion]);
 
   return (
-    <section ref={sectionRef} className="relative bg-[#282828] py-24 md:py-32 lg:py-40 overflow-hidden">
+    <section ref={sectionRef} className="relative bg-[#282828] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden">
       {/* Ambient gold glow, consistent with Core Values / Journal dark sections */}
       <div
         className="absolute inset-0 pointer-events-none opacity-30"
         style={{ background: `radial-gradient(ellipse 60% 40% at 50% 15%, ${GOLD}1a, transparent 70%)` }}
       />
 
-      <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
+      <div className="relative z-10 max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
 
         <p
-          className="ma-label text-center text-[#DDD9CE]/80 text-xs md:text-sm tracking-[0.28em] uppercase mb-10 md:mb-14"
+          className="ma-label text-center text-[#DDD9CE]/80 text-xs md:text-sm tracking-[0.28em] uppercase mb-8 md:mb-10"
           style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
         >
-          03 — Mission &amp; Approach
+          Mission &amp; Approach
         </p>
 
         {/* MISSION — one large declarative statement, not a paragraph. */}
         <div className="ma-mission max-w-4xl mx-auto text-center mb-10 md:mb-12">
           <h2
-            className="text-[#F6F6F6] text-3xl sm:text-4xl md:text-5xl lg:text-[3.4rem] xl:text-6xl font-normal leading-[1.25]"
+            className="text-[#F6F6F6] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-normal leading-[1.3]"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">
@@ -175,7 +175,7 @@ export default function MissionApproachSection() {
         </div>
 
         <p
-          className="ma-mission-sub text-center text-[#DDD9CE]/75 text-sm md:text-[0.95rem] leading-relaxed max-w-xl mx-auto mb-20 md:mb-28"
+          className="ma-mission-sub text-center text-[#DDD9CE]/75 text-sm md:text-base leading-relaxed max-w-xl mx-auto mb-16 md:mb-20"
           style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
         >
           That mission shapes everything — from the first conversation to the
@@ -185,7 +185,7 @@ export default function MissionApproachSection() {
         {/* APPROACH */}
         <div className="ma-approach">
           <p
-            className="ma-approach-label text-center text-[#DDD9CE]/80 text-xs md:text-sm tracking-[0.28em] uppercase mb-12 md:mb-16"
+            className="ma-approach-label text-center text-[#DDD9CE]/80 text-xs md:text-sm tracking-[0.28em] uppercase mb-10 md:mb-12"
             style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
           >
             The Approach
@@ -193,7 +193,7 @@ export default function MissionApproachSection() {
 
           <div className="ma-steps relative">
             {/* Connecting thread — visible only at lg+ where steps sit in a single row */}
-            <div className="hidden lg:block absolute top-6 left-0 right-0 h-px bg-[#DDD9CE]/10">
+            <div className="hidden lg:block absolute top-[1.875rem] left-0 right-0 h-px bg-[#DDD9CE]/10">
               <div
                 ref={connectorRef}
                 className="absolute inset-0 h-full origin-left"
@@ -201,23 +201,23 @@ export default function MissionApproachSection() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8 lg:gap-x-8 lg:gap-y-0">
               {approach.map((step) => (
-                <div key={step.num} className="ma-step relative">
+                <div key={step.num} className="ma-step relative pt-0 lg:pt-16">
                   {/* Dot on the connecting thread */}
                   <span
-                    className="ma-step-dot hidden lg:block absolute top-6 left-0 -translate-y-1/2 w-2.5 h-2.5 rounded-full z-10"
-                    style={{ backgroundColor: GOLD, boxShadow: '0 0 0 6px #282828' }}
+                    className="ma-step-dot hidden lg:block absolute top-[1.875rem] left-0 -translate-y-1/2 w-3 h-3 rounded-full z-10"
+                    style={{ backgroundColor: GOLD, boxShadow: `0 0 0 8px #282828` }}
                   />
 
                   <p
-                    className="ma-step-num text-4xl md:text-5xl mb-5"
+                    className="ma-step-num text-3xl md:text-4xl mb-3"
                     style={{ color: GOLD, fontFamily: 'var(--font-eb-garamond), serif' }}
                   >
                     {step.num}
                   </p>
                   <h3
-                    className="ma-step-title text-[#F6F6F6] text-lg md:text-xl lg:text-[1.35rem] mb-3 leading-snug"
+                    className="ma-step-title text-[#F6F6F6] text-base md:text-lg lg:text-xl mb-2.5 leading-snug"
                     style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
                   >
                     {step.title}

@@ -114,7 +114,7 @@ export default function Hero() {
 
           {/* Headline — masked reveal */}
           <h1
-            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.15] mb-6 md:mb-8"
+            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.30] mb-6 md:mb-8"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">
