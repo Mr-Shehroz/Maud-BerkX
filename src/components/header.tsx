@@ -19,7 +19,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems = ['About', 'Journal', 'Wisdom', 'Podcast','Contact'];
+  const navItems = ['About', 'Journal', 'Podcast','Contact'];
 
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
