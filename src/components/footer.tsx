@@ -60,7 +60,7 @@ export default function Footer() {
       {/* Elegant Top Border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C5A065]/50 to-transparent"></div>
 
-      <div className="footer-container relative z-10 max-w-[1500px] mx-auto px-8 md:px-12 lg:px-16">
+      <div className="footer-container relative z-10 max-w-[1500px] mx-auto px-4 md:px-6 xl:px-10">
         
         {/* Main Footer Content - Strictly Equal Columns & Spacing */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 items-start mb-20">
@@ -84,7 +84,7 @@ export default function Footer() {
           </div>
 
           {/* Column 2: Navigation */}
-          <div className="footer-col ml-[25%]">
+          <div className="footer-col lg:ml-[25%]">
             <h3 
               className="text-[#C5A065] text-sm font-semibold tracking-[0.2em] uppercase mb-6"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
@@ -107,7 +107,7 @@ export default function Footer() {
           </div>
 
           {/* Column 3: Contact */}
-          <div className="footer-col ml-[-15%]">
+          <div className="footer-col lg:ml-[-15%]">
             <h3 
               className="text-[#C5A065] text-sm font-semibold tracking-[0.2em] uppercase mb-6"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}

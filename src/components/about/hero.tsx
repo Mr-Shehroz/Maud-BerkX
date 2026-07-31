@@ -57,7 +57,7 @@ export default function AboutHero() {
     >
       {/* Background layer with Ken Burns effect */}
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-50"
+        className="absolute inset-0 bg-cover lg:bg-center bg-position-[30%_100%] bg-no-repeat opacity-50"
         style={{
           backgroundImage: `url('/banner-3.png')`,
           transformOrigin: 'center center',
@@ -69,11 +69,11 @@ export default function AboutHero() {
 
       {/* Content Container */}
       <div className="relative z-10 w-full max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 pb-20 pt-[50vh]">
-        <div className="max-w-4xl ml-auto">
+        <div className="xl:max-w-4xl max-w-2xl ml-auto">
 
           {/* Headline — masked reveal */}
           <h1
-            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.35] mb-6 md:mb-8"
+            className="text-white text-4xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl font-normal leading-[1.1] md:leading-[1.35] mb-6 md:mb-8"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">

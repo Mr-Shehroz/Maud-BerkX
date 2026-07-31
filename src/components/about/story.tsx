@@ -90,7 +90,7 @@ export default function StorySection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
 
           {/* Left Side: Content */}
-          <div className="lg:col-span-7 lg:pr-6 xl:pr-10 order-2 lg:order-1">
+          <div className="lg:col-span-7 lg:pr-6 xl:pr-10 order-2 lg:order-1 lg:mt-0 mt-[3vh]">
             <span
               ref={eyebrowRef}
               className="block text-xs md:text-sm tracking-[0.25em] uppercase mb-4 md:mb-5"

@@ -107,7 +107,7 @@ export default function PodcastHero() {
       `}</style>
       {/* Background layer — swap for a studio / microphone image that matches your other pages */}
       <div
-        className="absolute inset-0 bg-[url('/banner-5.png')] bg-cover bg-center bg-no-repeat opacity-40"
+        className="absolute inset-0 bg-[url('/banner-5.png')] bg-cover md:bg-center bg-position-[35%_100%] bg-no-repeat opacity-40"
         style={{ transformOrigin: 'center center' }}
       />
 
@@ -148,7 +148,7 @@ export default function PodcastHero() {
 
           {/* Headline — masked reveal, identical mechanic to homepage */}
           <h1
-            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal leading-[1.15] mb-6 md:mb-8"
+            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal leading-[1.35] mb-6 md:mb-8"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">

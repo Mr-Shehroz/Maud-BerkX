@@ -1,7 +1,7 @@
 import JournalArchive from '@/components/journal/archive'
-import CategoriesFilter from '@/components/journal/categories'
 import FeaturedArticle from '@/components/journal/featured'
 import JournalHero from '@/components/journal/hero'
+import PodcastPromo from '@/components/journal/podcast-promo'
 import JoinSection from '@/components/newsletter'
 
 const Journal = () => {
@@ -10,8 +10,8 @@ const Journal = () => {
         <JournalHero />
         <FeaturedArticle />
         <JournalArchive />
+        <PodcastPromo />
         <JoinSection />
-        {/* <CategoriesFilter /> */}
     </section>
   )
 }

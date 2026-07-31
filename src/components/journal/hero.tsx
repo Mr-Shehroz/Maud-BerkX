@@ -65,7 +65,7 @@ export default function JournalHero() {
       {/* Background layer with Ken Burns — swap the path to your actual
           journal banner asset. */}
       <div
-        className="absolute inset-0 bg-[url('/banner-4.png')] bg-cover bg-center bg-no-repeat opacity-60"
+        className="absolute inset-0 bg-[url('/banner-4.png')] bg-cover md:bg-center bg-position-[40%_100%] bg-no-repeat opacity-60"
         style={{ transformOrigin: 'center center' }}
       />
 
@@ -81,7 +81,7 @@ export default function JournalHero() {
           </p>
 
           <h1
-            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-normal leading-[1.1] md:leading-[1.15] mb-6 md:mb-8"
+            className="text-white text-4xl sm:text-5xl md:text-6xl xl:text-7xl 2xl:text-8xl font-normal leading-[1.1] md:leading-[1.35] mb-6 md:mb-8"
             style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
           >
             <span className="block overflow-hidden">
@@ -94,7 +94,7 @@ export default function JournalHero() {
             </span>
           </h1>
 
-          <div className="flex justify-center mb-8 md:mb-10">
+          <div className="flex justify-end mb-8 md:mb-10">
             <span
               ref={goldLineRef}
               className="block h-px w-24 md:w-32 origin-center"

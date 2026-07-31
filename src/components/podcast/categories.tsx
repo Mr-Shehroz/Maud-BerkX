@@ -63,7 +63,7 @@ export default function Categories() {
         }}
       />
 
-      <div className="w-full max-w-[1500px] mx-auto px-6 md:px-10 relative z-10">
+      <div className="w-full max-w-[1500px] mx-auto px-4 md:px-6 xl:px-10 relative z-10">
 
         {/* Header */}
         <div 

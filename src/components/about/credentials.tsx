@@ -242,7 +242,7 @@ export default function CredentialsSection() {
         aria-hidden
       />
 
-      <div className="relative z-10 max-w-[1500px] mx-auto px-6 md:px-12">
+      <div className="relative z-10 max-w-[1500px] mx-auto px-4 md:px-6 xl:px-10">
 
         {/* ───────── Intro block ───────── */}
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20">

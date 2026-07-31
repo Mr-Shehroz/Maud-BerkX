@@ -151,7 +151,7 @@ export default function CoreValuesSection() {
         </div>
 
         {/* Premium Carousel */}
-        <div className="values-swiper-container relative px-4 md:px-0">
+        <div className="values-swiper-container relative">
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}

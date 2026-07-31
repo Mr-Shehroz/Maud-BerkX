@@ -85,7 +85,7 @@ export default function AboutSection() {
       />
 
       <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-20 items-center">
 
           {/* Left Side: Artistic Collage */}
           <div
@@ -129,7 +129,7 @@ export default function AboutSection() {
           </div>
 
           {/* Right Side: Content */}
-          <div className="lg:col-span-7 lg:pl-6 xl:pl-10">
+          <div className="lg:col-span-7 lg:pl-6 xl:pl-10 lg:mt-0 mt-[4vh]">
             {/* Eyebrow label */}
             <span
               ref={eyebrowRef}

@@ -82,7 +82,7 @@ export default function FeaturedEpisode() {
           {/* Cover art with play control */}
           <div
             ref={artRef}
-            className="relative aspect-square w-full max-w-[440px] mx-auto lg:mx-0 overflow-hidden group cursor-pointer transition-all duration-700 ease-out"
+            className="relative aspect-square w-full lg:max-w-[440px] mx-auto lg:mx-0 overflow-hidden group cursor-pointer transition-all duration-700 ease-out"
             style={{
               opacity: artVisible ? 1 : 0,
               transform: artVisible ? 'translateY(0)' : 'translateY(24px)',

@@ -140,7 +140,7 @@ export default function TestimonialsSection() {
         </div>
 
         {/* Swiper Carousel */}
-        <div className="test-swiper-container relative px-4 md:px-0">
+        <div className="test-swiper-container relative">
           <Swiper
             modules={[Navigation, Pagination, Autoplay]}
             spaceBetween={24}
