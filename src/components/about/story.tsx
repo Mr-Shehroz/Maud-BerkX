@@ -8,6 +8,140 @@ gsap.registerPlugin(ScrollTrigger);
 const GOLD = '#C5A065';
 const BROWN = '#583929';
 
+/**
+ * `weight` mirrors the original CSS-grid row-span for that image so the
+ * proportions match the source layout exactly:
+ *   col1: f (4 rows, full height)             -> weight 4        (sum 4)
+ *   col2: a (2 rows) / d (2 rows)              -> weights 2, 2    (sum 4)
+ *   col3: b (1 row) / c (2 rows) / e (1 row)   -> weights 1, 2, 1 (sum 4)
+ * Column order is mirrored vs. the homepage About section (full-height
+ * column first instead of last) to match the mirrored text/image layout.
+ */
+type MarqueeImage = { src: string; alt: string; weight: number };
+
+const COLUMNS: {
+  images: MarqueeImage[];
+  duration: number;
+  direction: 'up' | 'down';
+}[] = [
+  {
+    images: [{ src: 'about-1.png', alt: 'Standing portrait', weight: 4 }],
+    duration: 18,
+    direction: 'down',
+  },
+  {
+    images: [
+      { src: 'about-4.png', alt: 'Portrait', weight: 2 },
+      { src: 'about-3.png', alt: 'Artistic closeup', weight: 2 },
+    ],
+    duration: 22,
+    direction: 'up',
+  },
+  {
+    images: [
+      { src: 'about-5.png', alt: 'Detail', weight: 1 },
+      { src: 'about-2.png', alt: 'Woman in dark', weight: 2 },
+      { src: 'about-6.png', alt: 'Hand detail', weight: 1 },
+    ],
+    duration: 28,
+    direction: 'down',
+  },
+];
+
+function MarqueeColumn({
+  images,
+  duration,
+  direction,
+  reducedMotion,
+}: {
+  images: MarqueeImage[];
+  duration: number;
+  direction: 'up' | 'down';
+  reducedMotion: boolean;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion || !trackRef.current) return;
+
+    const track = trackRef.current;
+
+    const ctx = gsap.context(() => {
+      // The track holds the image set duplicated twice, stacked, and is
+      // exactly 2x the visible (masked) container height. Animating
+      // yPercent between 0 and -50 moves exactly one full set out of
+      // view — invisible to the eye, since the duplicate set has
+      // scrolled into the exact same position, giving a seamless loop.
+      if (direction === 'up') {
+        gsap.fromTo(
+          track,
+          { yPercent: 0 },
+          { yPercent: -50, duration, ease: 'none', repeat: -1 }
+        );
+      } else {
+        gsap.fromTo(
+          track,
+          { yPercent: -50 },
+          { yPercent: 0, duration, ease: 'none', repeat: -1 }
+        );
+      }
+    });
+
+    return () => ctx.revert();
+  }, [duration, direction, reducedMotion]);
+
+  const doubled = [...images, ...images];
+
+  return (
+    <div className="relative h-full overflow-hidden">
+      <div
+        ref={trackRef}
+        className="flex flex-col gap-3 md:gap-4 h-[1120px] md:h-[1320px] lg:h-[1400px]"
+        style={{ willChange: 'transform' }}
+      >
+        {doubled.map((img, i) => (
+          <div
+            key={`${img.src}-${i}`}
+            className="story-img group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+            style={{ flexGrow: img.weight, flexBasis: 0, minHeight: 0 }}
+          >
+            <img
+              src={img.src}
+              alt={img.alt}
+              className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
+            />
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"
+              style={{ background: `linear-gradient(to top, ${GOLD}22, transparent)` }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Static fallback (no motion) — same proportions, single image set. */
+function StaticColumn({ images }: { images: MarqueeImage[] }) {
+  return (
+    <div className="relative h-full overflow-hidden flex flex-col gap-3 md:gap-4">
+      {images.map((img, i) => (
+        <div
+          key={`${img.src}-${i}`}
+          className="story-img group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+          style={{ flexGrow: img.weight, flexBasis: 0, minHeight: 0 }}
+        >
+          <img
+            src={img.src}
+            alt={img.alt}
+            className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function StorySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -159,43 +293,22 @@ export default function StorySection() {
             </div>
           </div>
 
-          {/* Right Side: Artistic Collage — same grid structure as
-              homepage About section, different crop selection */}
-          <div
-            className="lg:col-span-5 grid gap-3 md:gap-4 h-[560px] md:h-[660px] lg:h-[700px] order-1 lg:order-2"
-            style={{
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridTemplateRows: 'repeat(4, 1fr)',
-              gridTemplateAreas: `
-                "f a b"
-                "f a c"
-                "f d c"
-                "f d e"
-              `,
-            }}
-          >
-            {[
-              { area: 'a', src: 'about-4.png', alt: 'Portrait' },
-              { area: 'b', src: 'about-5.png', alt: 'Detail' },
-              { area: 'c', src: 'about-2.png', alt: 'Woman in dark' },
-              { area: 'd', src: 'about-3.png', alt: 'Artistic closeup' },
-              { area: 'e', src: 'about-6.png', alt: 'Hand detail' },
-              { area: 'f', src: 'about-1.png', alt: 'Standing portrait' },
-            ].map((img) => (
-              <div
-                key={img.area}
-                className="story-img group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
-                style={{ gridArea: img.area }}
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"
-                  style={{ background: `linear-gradient(to top, ${GOLD}22, transparent)` }}
-                />
+          {/* Right Side: Marquee Collage — same scrolling behavior as
+              homepage About section, mirrored column order and Story's
+              own crop selection */}
+          <div className="lg:col-span-5 flex gap-3 md:gap-4 h-[560px] md:h-[660px] lg:h-[700px] order-1 lg:order-2">
+            {COLUMNS.map((col, i) => (
+              <div key={i} className="relative h-full flex-1 min-w-0">
+                {prefersReducedMotion ? (
+                  <StaticColumn images={col.images} />
+                ) : (
+                  <MarqueeColumn
+                    images={col.images}
+                    duration={col.duration}
+                    direction={col.direction}
+                    reducedMotion={!!prefersReducedMotion}
+                  />
+                )}
               </div>
             ))}
           </div>

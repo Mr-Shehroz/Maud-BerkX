@@ -99,9 +99,11 @@ export default function Hero() {
       ref={heroRef} 
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#121212]"
     >
+      <div className='bg-black/80 absolute inset-0'/>
+      <p className='2xl:text-[110px] lg:text-[95px] text-[80px] absolute hidden md:block 2xl:left-[-15%] xl:left-[-17%] lg:left-[-25%] left-[-32%] 2xl:top-[38.5%] top-[43%] -rotate-90 text-[#C5A065] tracking-widest' style={{ fontFamily: 'var(--font-eb-garamond), serif' }}>MAUD BERKX</p>
       {/* Background layer with Ken Burns effect */}
       <div
-        className="absolute inset-0 bg-[url('/banner.png')] bg-cover bg-center bg-no-repeat opacity-60"
+        className="absolute inset-0 bg-[url('/banner.webp')] bg-cover bg-center bg-no-repeat opacity-60"
         style={{ transformOrigin: 'center center' }}
       />
 

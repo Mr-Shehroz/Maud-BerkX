@@ -98,7 +98,7 @@ export default function CoreValuesSection() {
       <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 relative z-10">
 
         {/* Header with Navigation */}
-        <div className="relative mb-16 md:mb-20">
+        <div className="relative mb-[4vh]">
           {/* Heading */}
           <div className="values-heading text-center max-w-3xl mx-auto">
             <p
@@ -168,7 +168,7 @@ export default function CoreValuesSection() {
               clickable: true,
               el: '.values-swiper-pagination',
             }}
-            className="values-swiper !pb-16 flex"
+            className="values-swiper !pb-12 flex"
           >
             {values.map((value, i) => (
               <SwiperSlide key={value.title}>

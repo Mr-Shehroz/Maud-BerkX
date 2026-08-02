@@ -6,30 +6,28 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const GOLD = '#C5A065';
-const BROWN = '#583929';
 
 export default function MissionApproachSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const railFillRef = useRef<HTMLDivElement>(null);
 
   const approach = [
     {
-      numeral: 'I',
+      numeral: '01',
       title: 'Listen First',
       desc: 'Every engagement begins with deep, unhurried listening — to the person, the pressures they carry, and the calling underneath both.',
     },
     {
-      numeral: 'II',
+      numeral: '02',
       title: 'Discern Together',
       desc: "Wisdom is drawn out, not handed down. Maud walks alongside leaders as they name what they already sense but haven't yet said aloud.",
     },
     {
-      numeral: 'III',
+      numeral: '03',
       title: 'Build with Intention',
       desc: 'Strategy is shaped around what will actually last — structures, habits, and decisions built to hold weight over decades, not quarters.',
     },
     {
-      numeral: 'IV',
+      numeral: '04',
       title: 'Steward the Legacy',
       desc: "The work doesn't end at implementation. Ongoing stewardship ensures what's built continues to serve long after the engagement closes.",
     },
@@ -43,8 +41,8 @@ export default function MissionApproachSection() {
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
         gsap.set(
-          '.ma-label, .ma-initial, .ma-mission-text, .ma-mission-sub, .ma-step-numeral, .ma-step-title, .ma-step-desc, .ma-step-rule',
-          { opacity: 1, x: 0, y: 0, scaleX: 1, scaleY: 1 }
+          '.ma-label, .ma-initial, .ma-mission-text, .ma-mission-sub, .ma-card',
+          { opacity: 1, x: 0, y: 0, scale: 1 }
         );
         return;
       }
@@ -61,7 +59,6 @@ export default function MissionApproachSection() {
         }
       );
 
-      // Illuminated initial — a single deliberate flourish, not scattered motion
       gsap.fromTo(
         '.ma-initial',
         { opacity: 0, scale: 0.85, rotate: -4 },
@@ -101,64 +98,18 @@ export default function MissionApproachSection() {
         }
       );
 
-      // The ribbon — a bookmark tracing progress down the ledger as you read
-      if (railFillRef.current) {
-        gsap.fromTo(
-          railFillRef.current,
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: 'none',
-            transformOrigin: 'top center',
-            scrollTrigger: {
-              trigger: '.ma-steps',
-              start: 'top 65%',
-              end: 'bottom 75%',
-              scrub: 0.6,
-            },
-          }
-        );
-      }
-
-      gsap.utils.toArray<HTMLElement>('.ma-step').forEach((step) => {
-        gsap.fromTo(
-          step.querySelector('.ma-step-numeral'),
-          { opacity: 0, x: -12 },
-          {
-            opacity: 1,
-            x: 0,
-            duration: 0.7,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: step, start: 'top 85%' },
-          }
-        );
-        gsap.fromTo(
-          [step.querySelector('.ma-step-title'), step.querySelector('.ma-step-desc')],
-          { opacity: 0, y: 18 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.07,
-            delay: 0.08,
-            ease: 'power3.out',
-            scrollTrigger: { trigger: step, start: 'top 85%' },
-          }
-        );
-        // Hand-inked underline drawing on beneath each title
-        gsap.fromTo(
-          step.querySelector('.ma-step-rule'),
-          { scaleX: 0 },
-          {
-            scaleX: 1,
-            duration: 0.9,
-            ease: 'power2.inOut',
-            delay: 0.35,
-            transformOrigin: 'left center',
-            scrollTrigger: { trigger: step, start: 'top 85%' },
-          }
-        );
-      });
+      gsap.fromTo(
+        '.ma-card',
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.12,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '.ma-cards', start: 'top 80%' },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -185,10 +136,9 @@ export default function MissionApproachSection() {
         </p>
 
         <div className="grid grid-cols-1 lg:grid-cols-[0.85fr_1.15fr] gap-y-16 lg:gap-x-16 xl:gap-x-24">
-          {/* MISSION — read like the opening page of a ledger, not a centered banner */}
+          {/* MISSION */}
           <div className="ma-mission-col lg:sticky lg:top-28 self-start">
             <div className="max-w-md">
-              {/* True drop cap: letter floats so the heading text wraps beside it, no overlap */}
               <div className="ma-initial-wrap overflow-hidden">
                 <h2
                   className="ma-mission-text text-[#F6F6F6] text-2xl sm:text-3xl md:text-[2.15rem] lg:text-4xl font-normal leading-[1.35]"
@@ -226,52 +176,62 @@ export default function MissionApproachSection() {
             </div>
           </div>
 
-          {/* APPROACH — a four-entry ledger, read down the page like turned pages */}
-          <div className="ma-steps relative pl-16 sm:pl-20">
-            {/* the ribbon: a vertical rail with a traveling gold fill, like a bookmark down the spine */}
-            <div className="absolute left-6 sm:left-8 top-1 bottom-1 w-px bg-[#DDD9CE]/12">
+          {/* APPROACH — a 2x2 grid of quiet, self-contained cards. Each carries
+              its own ghosted numeral in the corner instead of relying on a
+              connecting line, so the layout reads as four standalone
+              principles rather than sequential steps on a track. */}
+          <div className="ma-cards grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+            {approach.map((step) => (
               <div
-                ref={railFillRef}
-                className="absolute inset-0 w-full origin-top"
-                style={{ backgroundColor: GOLD, transform: 'scaleY(0)' }}
-              />
-            </div>
+                key={step.numeral}
+                className="ma-card group relative overflow-hidden p-7 md:p-8 border transition-colors duration-500"
+                style={{
+                  borderColor: `${GOLD}26`,
+                  backgroundColor: 'rgba(246,246,246,0.02)',
+                }}
+              >
+                {/* ghosted numeral, tucked in the corner as texture, not a label */}
+                <span
+                  className="pointer-events-none select-none absolute -top-3 right-3 text-[5rem] md:text-[6rem] leading-none font-normal transition-colors duration-500"
+                  style={{
+                    fontFamily: 'var(--font-eb-garamond), serif',
+                    color: 'rgba(246,246,246,0.05)',
+                  }}
+                  aria-hidden="true"
+                >
+                  {step.numeral}
+                </span>
 
-            <div className="flex flex-col gap-14 md:gap-16">
-              {approach.map((step) => (
-                <div key={step.numeral} className="ma-step relative">
+                {/* top accent that draws in on hover — replaces the old rail as the only "line" in the section */}
+                <span
+                  className="absolute top-0 left-0 h-[2px] w-0 group-hover:w-full transition-[width] duration-500 ease-out"
+                  style={{ backgroundColor: GOLD }}
+                />
+
+                <div className="relative">
                   <span
-                    className="ma-step-numeral absolute -left-16 sm:-left-20 top-0 w-16 sm:w-20 text-right pr-6 sm:pr-7 text-2xl md:text-[1.7rem]"
-                    style={{
-                      fontFamily: 'var(--font-eb-garamond), serif',
-                      color: GOLD,
-                      fontStyle: 'italic',
-                    }}
+                    className="block text-xs tracking-[0.2em] mb-3"
+                    style={{ color: GOLD, fontFamily: 'var(--font-hanken), sans-serif' }}
                   >
                     {step.numeral}
                   </span>
 
                   <h3
-                    className="ma-step-title text-[#F6F6F6] text-lg md:text-xl lg:text-[1.4rem] mb-1 leading-snug"
+                    className="text-[#F6F6F6] text-lg md:text-xl lg:text-[1.35rem] mb-3 leading-snug"
                     style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
                   >
                     {step.title}
                   </h3>
 
-                  <span
-                    className="ma-step-rule block h-px w-16 mb-3.5 origin-left"
-                    style={{ backgroundColor: `${BROWN}00`, borderTop: `1px solid ${GOLD}80` }}
-                  />
-
                   <p
-                    className="ma-step-desc text-[#DDD9CE]/70 text-sm md:text-[0.95rem] leading-[1.7] max-w-md"
+                    className="text-[#DDD9CE]/65 text-sm md:text-[0.95rem] leading-[1.7]"
                     style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
                   >
                     {step.desc}
                   </p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

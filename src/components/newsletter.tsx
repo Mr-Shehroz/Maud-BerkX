@@ -40,7 +40,7 @@ export default function JoinSection() {
   return (
     <section 
       ref={sectionRef}
-      className="relative bg-[#0F0F0F] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden"
+      className="relative bg-[#0F0F0F] py-[50px] lg:py-[60px] overflow-hidden"
     >
       {/* Single, elegant top border accent */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C5A065]/40 to-transparent"></div>
@@ -64,10 +64,10 @@ export default function JoinSection() {
                 </span>
 
                 <h2 
-                  className="join-heading text-white text-4xl md:text-5xl lg:text-6xl font-normal mb-6 tracking-tight leading-tight"
+                  className="join-heading text-white text-4xl md:text-5xl xl:text-6xl font-normal mb-6 tracking-tight leading-tight"
                   style={{ fontFamily: 'var(--font-eb-garamond), serif' }}
                 >
-                  Join the <br className="hidden md:block" /> Inner Circle
+                  Join the Inner Circle
                 </h2>
 
                 <p 

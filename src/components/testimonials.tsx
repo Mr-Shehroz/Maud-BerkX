@@ -93,7 +93,7 @@ export default function TestimonialsSection() {
       <div className="relative z-10 max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4">
         
         {/* Header with Navigation Arrows - Top Right */}
-        <div className="relative mb-16 md:mb-20">
+        <div className="relative mb-[6vh]">
           {/* Header Content */}
           <div className="text-center">
             <p 
@@ -164,7 +164,7 @@ export default function TestimonialsSection() {
                 swiper.params.navigation.nextEl = nextRef.current;
               }
             }}
-            className="test-swiper !pb-16"
+            className="test-swiper !pb-12"
           >
             {testimonials.map((item, index) => (
               <SwiperSlide key={index}>

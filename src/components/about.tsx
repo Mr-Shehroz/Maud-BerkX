@@ -7,6 +7,142 @@ gsap.registerPlugin(ScrollTrigger);
 
 const GOLD = '#C5A065';
 
+/**
+ * `weight` mirrors the original CSS-grid row-span for that image, so the
+ * proportions match the source layout exactly:
+ *   col1: a (2 rows) / d (2 rows)            -> weights 2, 2   (sum 4)
+ *   col2: b (1 row) / c (2 rows) / e (1 row) -> weights 1, 2, 1 (sum 4)
+ *   col3: f (4 rows, full height)            -> weight 4        (sum 4)
+ * Every column's weights sum to 4, matching the original 4-row grid, so
+ * the per-row pixel height stays consistent across all three columns.
+ */
+type MarqueeImage = { src: string; alt: string; weight: number };
+
+const COLUMNS: {
+  images: MarqueeImage[];
+  duration: number;
+  direction: 'up' | 'down';
+}[] = [
+  {
+    images: [
+      { src: 'about-1.png', alt: 'Portrait', weight: 2 },
+      { src: 'about-2.png', alt: 'Artistic closeup', weight: 2 },
+    ],
+    duration: 22,
+    direction: 'up',
+  },
+  {
+    images: [
+      { src: 'about-3.png', alt: 'Hands', weight: 1 },
+      { src: 'about-4.png', alt: 'Woman in dark', weight: 2 },
+      { src: 'about-5.png', alt: 'Hand detail', weight: 1 },
+    ],
+    duration: 28,
+    direction: 'down',
+  },
+  {
+    images: [
+      { src: 'about-6.png', alt: 'Standing portrait', weight: 4 },
+    ],
+    duration: 18,
+    direction: 'up',
+  },
+];
+
+function MarqueeColumn({
+  images,
+  duration,
+  direction,
+  reducedMotion,
+}: {
+  images: MarqueeImage[];
+  duration: number;
+  direction: 'up' | 'down';
+  reducedMotion: boolean;
+}) {
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion || !trackRef.current) return;
+
+    const track = trackRef.current;
+
+    const ctx = gsap.context(() => {
+      // The track holds the image set duplicated twice, stacked, and is
+      // exactly 2x the visible (masked) container height. Animating
+      // yPercent between 0 and -50 moves exactly one full set out of
+      // view — invisible to the eye, since the duplicate set has
+      // scrolled into the exact same position, giving a seamless loop.
+      if (direction === 'up') {
+        gsap.fromTo(
+          track,
+          { yPercent: 0 },
+          { yPercent: -50, duration, ease: 'none', repeat: -1 }
+        );
+      } else {
+        gsap.fromTo(
+          track,
+          { yPercent: -50 },
+          { yPercent: 0, duration, ease: 'none', repeat: -1 }
+        );
+      }
+    });
+
+    return () => ctx.revert();
+  }, [duration, direction, reducedMotion]);
+
+  const doubled = [...images, ...images];
+
+  return (
+    <div className="relative h-full overflow-hidden">
+      <div
+        ref={trackRef}
+        className="flex flex-col gap-3 md:gap-4 h-[1120px] md:h-[1320px] lg:h-[1400px]"
+        style={{ willChange: 'transform' }}
+      >
+        {doubled.map((img, i) => (
+          <div
+            key={`${img.src}-${i}`}
+            className="group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+            style={{ flexGrow: img.weight, flexBasis: 0, minHeight: 0 }}
+          >
+            <img
+              src={img.src}
+              alt={img.alt}
+              className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
+            />
+            <div
+              className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"
+              style={{ background: `linear-gradient(to top, ${GOLD}22, transparent)` }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** Static fallback (no motion) — same proportions, single image set. */
+function StaticColumn({ images }: { images: MarqueeImage[] }) {
+  return (
+    <div className="relative h-full overflow-hidden flex flex-col gap-3 md:gap-4">
+      {images.map((img, i) => (
+        <div
+          key={`${img.src}-${i}`}
+          className="group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
+          style={{ flexGrow: img.weight, flexBasis: 0, minHeight: 0 }}
+        >
+          <img
+            src={img.src}
+            alt={img.alt}
+            className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -21,7 +157,6 @@ export default function AboutSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        gsap.set('.about-img', { opacity: 1, y: 0, scale: 1 });
         gsap.set('.about-text', { opacity: 1, y: 0 });
         gsap.set(eyebrowRef.current, { opacity: 1, y: 0 });
         return;
@@ -36,23 +171,16 @@ export default function AboutSection() {
         defaults: { ease: 'expo.out' },
       });
 
-      tl.from('.about-img', {
+      tl.from(eyebrowRef.current, {
         opacity: 0,
-        y: 40,
-        scale: 1.05,
-        duration: 1.1,
-        stagger: 0.1,
+        y: 12,
+        duration: 0.6,
       })
-        .from(eyebrowRef.current, {
-          opacity: 0,
-          y: 12,
-          duration: 0.6,
-        }, '-=0.7')
         .from(headingRef.current, {
           opacity: 0,
           y: 20,
           duration: 0.8,
-        }, '-=0.5')
+        }, '-=0.3')
         .fromTo(
           goldLineRef.current,
           { scaleX: 0 },
@@ -76,54 +204,40 @@ export default function AboutSection() {
       className="relative py-[50px] md:py-[80px] lg:py-[100px] bg-[#F6F6F6] overflow-hidden"
     >
       {/* Subtle background texture */}
-      <div
+      {/* <div
         className="absolute inset-0 opacity-[0.03] pointer-events-none"
         style={{
           backgroundImage: `radial-gradient(circle at 1px 1px, #453E33 1px, transparent 0)`,
           backgroundSize: '32px 32px',
         }}
-      />
+      /> */}
 
       <div className="max-w-[1500px] mx-auto xl:px-10 md:px-6 px-4 relative">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-20 items-center">
 
-          {/* Left Side: Artistic Collage */}
-          <div
-            className="lg:col-span-5 grid gap-3 md:gap-4 h-[560px] md:h-[660px] lg:h-[700px]"
-            style={{
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gridTemplateRows: 'repeat(4, 1fr)',
-              gridTemplateAreas: `
-                "a b f"
-                "a c f"
-                "d c f"
-                "d e f"
-              `,
-            }}
-          >
-            {[
-              { area: 'a', src: 'about-1.png', alt: 'Portrait' },
-              { area: 'b', src: 'about-3.png', alt: 'Hands' },
-              { area: 'c', src: 'about-4.png', alt: 'Woman in dark' },
-              { area: 'd', src: 'about-2.png', alt: 'Artistic closeup' },
-              { area: 'e', src: 'about-5.png', alt: 'Hand detail' },
-              { area: 'f', src: 'about-6.png', alt: 'Standing portrait' },
-            ].map((img) => (
-              <div
-                key={img.area}
-                className="about-img group relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)]"
-                style={{ gridArea: img.area }}
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-full object-cover grayscale transition-transform duration-[1200ms] ease-out group-hover:scale-[1.06]"
-                />
-                {/* Subtle gold-tinted overlay on hover */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-multiply"
-                  style={{ background: `linear-gradient(to top, ${GOLD}22, transparent)` }}
-                />
+          {/* Left Side: Marquee Collage */}
+          <div className="lg:col-span-5 flex gap-3 md:gap-4 h-[560px] md:h-[660px] lg:h-[700px]">
+            {COLUMNS.map((col, i) => (
+              <div key={i} className="relative h-full flex-1 min-w-0">
+                {/* top/bottom fade edges so images scroll in/out softly */}
+                {/* <div
+                  className="pointer-events-none absolute inset-x-0 top-0 h-10 z-10"
+                  style={{ background: 'linear-gradient(to bottom, #F6F6F6, transparent)' }}
+                /> */}
+                {/* <div
+                  className="pointer-events-none absolute inset-x-0 bottom-0 h-10 z-10"
+                  style={{ background: 'linear-gradient(to top, #F6F6F6, transparent)' }}
+                /> */}
+                {prefersReducedMotion ? (
+                  <StaticColumn images={col.images} />
+                ) : (
+                  <MarqueeColumn
+                    images={col.images}
+                    duration={col.duration}
+                    direction={col.direction}
+                    reducedMotion={!!prefersReducedMotion}
+                  />
+                )}
               </div>
             ))}
           </div>
