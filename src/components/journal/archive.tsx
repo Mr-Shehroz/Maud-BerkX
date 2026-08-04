@@ -94,9 +94,10 @@ export default function JournalArchive() {
     if (prefersReducedMotion) return;
     const card = cardRefs.current[i];
     if (!card) return;
-    gsap.to(card.querySelector('.ja-card-image'), { scale: 1.08, filter: 'grayscale(0%)', duration: 0.7, ease: 'power2.out' });
+    gsap.to(card.querySelector('.ja-card-image'), { scale: 1.06, filter: 'grayscale(0%)', duration: 0.7, ease: 'power2.out' });
     gsap.to(card.querySelector('.ja-card-arrow'), { x: 4, opacity: 1, duration: 0.3, ease: 'power2.out' });
   };
+
   const handleLeave = (i: number) => {
     if (prefersReducedMotion) return;
     const card = cardRefs.current[i];
@@ -108,7 +109,7 @@ export default function JournalArchive() {
   return (
     <section ref={sectionRef} data-section-label="The Archive" className="relative bg-[#282828] py-[50px] md:py-[80px] lg:py-[100px] overflow-hidden">
 
-      {/* Subtle texture, same safe device used across the site */}
+      {/* Subtle texture */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ backgroundImage: `radial-gradient(#F6F6F60d 1px, transparent 1px)`, backgroundSize: '30px 30px' }}
@@ -149,46 +150,55 @@ export default function JournalArchive() {
           lived, not on a schedule.
         </p>
 
-        {/* Bento grid — the first essay is a large spotlight card, giving
-            the archive real hierarchy instead of nine identical boxes. */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14 md:gap-y-16">
+        {/* Editorial grid — items-start so cards never stretch and leave gaps */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14 md:gap-y-16 items-start">
           {visibleArticles.map((article, i) => {
             const isSpotlight = i === 0;
             return (
               <a
                 key={`${article.title}-${i}`}
                 href={article.href}
-                ref={(el) => {cardRefs.current[i] = el}}
+                ref={(el) => { cardRefs.current[i] = el }}
                 onMouseEnter={() => handleEnter(i)}
                 onMouseLeave={() => handleLeave(i)}
-                className={`group flex flex-col h-full ${
-                  isSpotlight ? 'sm:col-span-2 lg:col-span-2 lg:row-span-2' : ''
-                }`}
+                className={`group flex flex-col ${isSpotlight ? 'sm:col-span-2' : ''}`}
               >
-                {/* flex-1 lets the image genuinely fill whatever height the
-                    grid track gives this cell (crucial for the spotlight's
-                    row-span-2 — a fixed height here is what left the gap). */}
-                <div
-                  className={`relative overflow-hidden mb-6 flex-1 ${
-                    isSpotlight ? 'min-h-[20rem]' : 'min-h-[16rem]'
-                  }`}
-                >
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="ja-card-image absolute inset-0 w-full h-full object-cover object-top"
-                    style={{ filter: 'grayscale(65%)' }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#282828]/50 via-transparent to-transparent" />
-                  {isSpotlight && (
+                {/* =====================================================
+                    SPOTLIGHT — one tuned cinematic frame (wide aspect),
+                    crop anchored so the face always stays in frame
+                ====================================================== */}
+                {isSpotlight ? (
+                  <div className="relative overflow-hidden mb-6 bg-[#1c1c1c] aspect-[4/3] sm:aspect-[16/9]">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="ja-card-image absolute inset-0 w-full h-full object-cover object-[center_25%]"
+                      style={{ filter: 'grayscale(65%)' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#282828]/50 via-transparent to-transparent pointer-events-none" />
                     <span
-                      className="absolute top-5 left-5 px-3 py-1 text-[0.65rem] uppercase tracking-[0.2em] bg-[#F6F6F6] text-[#282828]"
+                      className="absolute top-5 left-5 z-20 px-3 py-1 text-[0.65rem] uppercase tracking-[0.2em] bg-[#F6F6F6] text-[#282828]"
                       style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
                     >
                       Latest
                     </span>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  /* =====================================================
+                     REGULAR CARDS — frame adapts to the photo's own ratio.
+                     Full width, full height, NOTHING cropped, no blur,
+                     no blank bars. Ever.
+                  ====================================================== */
+                  <div className="relative overflow-hidden mb-6 bg-[#1c1c1c]">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="ja-card-image block w-full h-auto"
+                      style={{ filter: 'grayscale(65%)' }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#282828]/40 via-transparent to-transparent pointer-events-none" />
+                  </div>
+                )}
 
                 <span
                   className="ja-card-rule block h-px w-10 mb-4 origin-left shrink-0"
