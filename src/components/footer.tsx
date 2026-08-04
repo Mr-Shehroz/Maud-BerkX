@@ -55,7 +55,7 @@ export default function Footer() {
   return (
     <footer 
       ref={footerRef}
-      className="relative bg-[#1a1a1a] pt-24 pb-10 overflow-hidden"
+      className="relative bg-[#1a1a1a] pt-24 overflow-hidden"
     >
       {/* Elegant Top Border */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C5A065]/50 to-transparent"></div>
@@ -133,7 +133,7 @@ export default function Footer() {
                   <p className="text-gray-300 text-base" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
                     Amsterdam, Netherlands
                   </p>
-                  <p className="text-gray-500 text-sm mt-1" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
+                  <p className="text-gray-300 text-sm mt-1" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
                     Available for International Travel
                   </p>
                 </div>
@@ -161,7 +161,7 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <p className="text-gray-500 text-sm" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
+            <p className="text-gray-300 text-sm" style={{ fontFamily: 'var(--font-hanken), sans-serif' }}>
               Join our community of women building lasting legacies.
             </p>
           </div>
@@ -169,37 +169,15 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="footer-col pt-10 border-t border-white/10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="footer-col py-[2vh] border-t border-white/10 text-center">
+          <div className="text-center">
             
             <p 
-              className="text-gray-500 text-sm"
+              className="text-gray-300 md:text-base text-sm"
               style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
             >
               © {new Date().getFullYear()} Maud Berkx. All rights reserved.
             </p>
-
-            <div className="flex items-center gap-8">
-              {legalLinks.map((link) => (
-                <a 
-                  key={link.name}
-                  href={link.href}
-                  className="text-gray-500 text-sm hover:text-[#C5A065] transition-colors duration-300"
-                  style={{ fontFamily: 'var(--font-hanken), sans-serif' }}
-                >
-                  {link.name}
-                </a>
-              ))}
-              
-              {/* Back to Top Button */}
-              <button 
-                onClick={scrollToTop}
-                className="ml-4 w-11 h-11 rounded-full border border-[#C5A065]/40 flex items-center justify-center text-[#C5A065] hover:bg-[#C5A065] hover:text-[#1a1a1a] transition-all duration-300"
-                aria-label="Back to top"
-              >
-                <ArrowUp size={16} />
-              </button>
-            </div>
 
           </div>
         </div>
